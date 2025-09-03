@@ -1,0 +1,19 @@
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+.pnp.*
+.pnp.js
+
+# Logs
+logs
+*.log
+
+# Env files
+.env
+.env.local
+.env.*.local
+
+# Build
+.next/
+dist/
