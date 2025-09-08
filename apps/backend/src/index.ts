@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import path from "path";
+import { verifyJWT } from "./middlewares/auth";
 
 // 👇 fuerza a cargar el .env que está en apps/backend/.env
 dotenv.config({ path: path.resolve(__dirname, "../.env") });
@@ -29,8 +30,12 @@ app.get("/", (req, res) => {
   res.send("Backend is running 🚀");
 });
 
-app.use("/api/auth", authRoutes);
-app.use("/api/auth", healthRoutes);
+app.get("/protected", verifyJWT, (req, res) => {
+  res.json({ message: "You are authorized!", user: (req as any).user });
+});
+
+app.use("/auth", authRoutes);
+app.use("/health", healthRoutes);
 
 app.listen(PORT, () => {
   console.log(`🚀 Backend listening on http://localhost:${PORT}`);
