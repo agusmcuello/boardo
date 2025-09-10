@@ -11,6 +11,9 @@ import bodyParser from "body-parser";
 
 import healthRoutes from "./routes/health";
 import authRoutes from "./routes/auth";
+import boardsRoutes from "./routes/boards";
+import listsRoutes from "./routes/lists";
+import cardsRoutes from "./routes/cards";
 
 const app = express();
 const allowedOrigins = ["http://localhost:3000"];
@@ -36,6 +39,10 @@ app.get("/protected", verifyJWT, (req, res) => {
 
 app.use("/auth", authRoutes);
 app.use("/health", healthRoutes);
+
+app.use("/api/boards", boardsRoutes);
+app.use("/api/lists", listsRoutes);
+app.use("/api/cards", cardsRoutes);
 
 app.listen(PORT, () => {
   console.log(`🚀 Backend listening on http://localhost:${PORT}`);
