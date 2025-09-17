@@ -1,45 +1,13 @@
 import { RegisterForm } from "@/components/auth/register-form";
+import styles from "./page.module.css";
 
 export default function RegisterPage() {
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "#f9fafb",
-      }}
-    >
-      <div
-        style={{
-          maxWidth: "400px",
-          width: "100%",
-          padding: "32px",
-        }}
-      >
-        <div
-          style={{
-            textAlign: "center",
-            marginBottom: "32px",
-          }}
-        >
-          <h2
-            style={{
-              fontSize: "32px",
-              fontWeight: "800",
-              color: "#111827",
-              marginBottom: "8px",
-            }}
-          >
-            Crear Cuenta
-          </h2>
-          <p
-            style={{
-              fontSize: "16px",
-              color: "#6b7280",
-            }}
-          >
+    <div className={styles.container}>
+      <div className={styles.box}>
+        <div className={styles.header}>
+          <h2 className={styles.title}>Crear Cuenta</h2>
+          <p className={styles.subtitle}>
             Únete a Boardo para gestionar tus tareas
           </p>
         </div>

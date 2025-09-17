@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import styles from "./login-form.module.css";
+import styles from "./register-form.module.css";
 
 export function RegisterForm() {
   const [name, setName] = useState("");
@@ -29,14 +29,12 @@ export function RegisterForm() {
     }
 
     try {
-      // Aquí harías la llamada a tu API de registro
       console.log("Registering user:", { name, email, password });
 
-      // Simulamos éxito y redirigimos
       setTimeout(() => {
-        router.push("/login");
+        router.push("/auth/login");
       }, 1000);
-    } catch (err) {
+    } catch {
       setError("Error al crear la cuenta. Intenta de nuevo.");
     } finally {
       setIsLoading(false);
@@ -86,33 +84,15 @@ export function RegisterForm() {
 
         {error && <div className={styles.error}>{error}</div>}
 
-        <Button type="submit" disabled={isLoading} style={{ width: "100%" }}>
+        <Button type="submit" disabled={isLoading} className={styles.submitBtn}>
           {isLoading ? "Creando cuenta..." : "Crear Cuenta"}
         </Button>
       </form>
 
-      <div
-        style={{
-          textAlign: "center",
-          marginTop: "24px",
-          padding: "16px 0",
-          borderTop: "1px solid #e5e7eb",
-        }}
-      >
-        <p
-          style={{
-            fontSize: "14px",
-            color: "#6b7280",
-          }}
-        >
+      <div className={styles.footer}>
+        <p>
           ¿Ya tienes cuenta?{" "}
-          <Link
-            href="/login"
-            style={{
-              color: "#2563eb",
-              fontWeight: "500",
-            }}
-          >
+          <Link href="/auth/login" className={styles.link}>
             Inicia sesión
           </Link>
         </p>

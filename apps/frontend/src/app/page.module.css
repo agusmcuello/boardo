@@ -33,6 +33,9 @@
   gap: 32px;
   grid-row-start: 2;
 }
+.main p {
+  text-align: center;
+}
 
 .main ol {
   font-family: var(--font-geist-mono);
@@ -67,10 +70,7 @@
   height: 48px;
   padding: 0 20px;
   border: 1px solid transparent;
-  transition:
-    background 0.2s,
-    color 0.2s,
-    border-color 0.2s;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
   cursor: pointer;
   display: flex;
   align-items: center;

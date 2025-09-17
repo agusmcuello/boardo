@@ -25,7 +25,7 @@ export function LoginForm() {
     try {
       await login({ email, password });
       router.push("/dashboard");
-    } catch (err) {
+    } catch {
       setError("Email o contraseña incorrectos");
     } finally {
       setIsLoading(false);
@@ -57,33 +57,15 @@ export function LoginForm() {
 
         {error && <div className={styles.error}>{error}</div>}
 
-        <Button type="submit" disabled={isLoading} style={{ width: "100%" }}>
+        <Button type="submit" disabled={isLoading} className={styles.submitBtn}>
           {isLoading ? "Iniciando sesión..." : "Iniciar Sesión"}
         </Button>
       </form>
 
-      <div
-        style={{
-          textAlign: "center",
-          marginTop: "24px",
-          padding: "16px 0",
-          borderTop: "1px solid #e5e7eb",
-        }}
-      >
-        <p
-          style={{
-            fontSize: "14px",
-            color: "#6b7280",
-          }}
-        >
+      <div className={styles.footer}>
+        <p>
           ¿No tienes cuenta?{" "}
-          <Link
-            href="/register"
-            style={{
-              color: "#2563eb",
-              fontWeight: "500",
-            }}
-          >
+          <Link href="/auth/register" className={styles.link}>
             Regístrate
           </Link>
         </p>
