@@ -1,56 +1,79 @@
 import { Router } from "express";
-import pool from "../config/db";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import pool from "../config/db";
 
 const router = Router();
+const JWT_SECRET = process.env.JWT_SECRET || "super_secret_key";
 
-// Registro de usuario
+// ✅ Registro
 router.post("/register", async (req, res) => {
   const { name, email, password } = req.body;
 
-  if (!email || !password) {
-    return res.status(400).json({ message: "Email and password required" });
-  }
-
   try {
-    const hashed = await bcrypt.hash(password, 10);
-    const [result]: any = await pool.query(
+    // Verificar si ya existe el usuario
+    const [existing] = (await pool.query(
+      "SELECT id FROM users WHERE email = ?",
+      [email]
+    )) as any;
+
+    if (existing.length > 0) {
+      return res.status(400).json({ error: "El email ya está registrado" });
+    }
+
+    // Hashear contraseña
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Guardar en DB
+    await pool.query(
       "INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)",
-      [name || null, email, hashed]
+      [name, email, hashedPassword]
     );
 
-    res.status(201).json({ id: result.insertId, email });
-  } catch (err: any) {
-    if (err.code === "ER_DUP_ENTRY") {
-      return res.status(409).json({ message: "Email already in use" });
-    }
-    console.error(err);
-    res.status(500).json({ message: "Server error" });
+    res.status(201).json({ message: "Usuario creado correctamente" });
+  } catch (err) {
+    console.error("❌ Error en /register:", err);
+    res.status(500).json({ error: "Error al registrar usuario" });
   }
 });
 
-// Login de usuario
+// ✅ Login
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
-  const [rows]: any = await pool.query("SELECT * FROM users WHERE email = ?", [
-    email,
-  ]);
-  const user = rows[0];
+  try {
+    // Buscar usuario
+    const [rows] = (await pool.query(
+      "SELECT id, name, email, password_hash FROM users WHERE email = ?",
+      [email]
+    )) as any;
 
-  if (!user) return res.status(401).json({ message: "Invalid credentials" });
+    if (rows.length === 0) {
+      return res.status(400).json({ error: "Usuario no encontrado" });
+    }
 
-  const match = await bcrypt.compare(password, user.password_hash);
-  if (!match) return res.status(401).json({ message: "Invalid credentials" });
+    const user = rows[0];
 
-  const token = jwt.sign(
-    { id: user.id, email: user.email },
-    process.env.JWT_SECRET || "secret",
-    { expiresIn: "4h" }
-  );
+    // Comparar contraseñas
+    const match = await bcrypt.compare(password, user.password_hash);
+    if (!match) {
+      return res.status(401).json({ error: "Contraseña incorrecta" });
+    }
 
-  res.json({ token });
+    // Generar JWT
+    const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, {
+      expiresIn: "1d",
+    });
+
+    res.json({
+      message: "Login exitoso",
+      token,
+      user: { id: user.id, name: user.name, email: user.email },
+    });
+  } catch (err) {
+    console.error("❌ Error en /login:", err);
+    res.status(500).json({ error: "Error al iniciar sesión" });
+  }
 });
 
 export default router;

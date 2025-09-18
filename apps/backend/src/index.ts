@@ -37,7 +37,7 @@ app.get("/protected", verifyJWT, (req, res) => {
   res.json({ message: "You are authorized!", user: (req as any).user });
 });
 
-app.use("/auth", authRoutes);
+app.use("/api/auth", authRoutes);
 app.use("/health", healthRoutes);
 
 app.use("/api/boards", boardsRoutes);
