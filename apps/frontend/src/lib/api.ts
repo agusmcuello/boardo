@@ -59,7 +59,6 @@ class ApiClient {
 
     let response: Response;
     try {
-      console.log("🔎 Fetching:", url);
       response = await fetch(url, config);
     } catch (err: any) {
       throw new ApiError(err.message || "Network error", 0);

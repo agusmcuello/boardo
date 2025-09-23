@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, ReactNode, useState } from "react";
+import { ReactNode, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
 
@@ -9,35 +9,22 @@ interface AuthGuardProps {
 }
 
 export function AuthGuard({ children }: AuthGuardProps) {
-  const { user } = useAuth();
-  const [isLoading, setIsloading] = useState(false);
-
+  const { user, isReady } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLoading && !user) {
-      router.push("/login");
+    if (isReady && !user) {
+      router.push("/auth/login");
     }
-  }, [user, isLoading, router]);
+  }, [isReady, user, router]);
 
-  if (isLoading) {
+  if (!isReady) {
     return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
-        Cargando...
-      </div>
+      <div style={{ textAlign: "center", marginTop: "20px" }}>Cargando...</div>
     );
   }
 
-  if (!user) {
-    return null;
-  }
+  if (!user) return null;
 
   return <>{children}</>;
 }

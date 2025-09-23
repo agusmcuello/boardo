@@ -2,6 +2,7 @@ import { Router } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import pool from "../config/db";
+import { verifyJWT } from "../middlewares/auth";
 
 const router = Router();
 const JWT_SECRET = process.env.JWT_SECRET || "super_secret_key";
@@ -64,6 +65,7 @@ router.post("/login", async (req, res) => {
     const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, {
       expiresIn: "1d",
     });
+    console.log("🔑 Generated token:", token);
 
     res.json({
       message: "Login exitoso",
@@ -73,6 +75,29 @@ router.post("/login", async (req, res) => {
   } catch (err) {
     console.error("❌ Error en /login:", err);
     res.status(500).json({ error: "Error al iniciar sesión" });
+  }
+});
+
+// ✅ Obtener usuario actual
+router.get("/me", verifyJWT, async (req, res) => {
+  console.log("📥 Authorization:", req.headers["authorization"]);
+  console.log("📥 Decoded user:", (req as any).user);
+  try {
+    const userId = (req as any).user.id;
+
+    const [rows] = (await pool.query(
+      "SELECT id, name, email FROM users WHERE id = ?",
+      [userId]
+    )) as any;
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: "Usuario no encontrado" });
+    }
+
+    res.json({ user: rows[0] });
+  } catch (err) {
+    console.error("❌ Error en /me:", err);
+    res.status(500).json({ error: "Error al obtener usuario" });
   }
 });
 
