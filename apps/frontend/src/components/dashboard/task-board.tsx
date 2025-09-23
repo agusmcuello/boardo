@@ -3,13 +3,13 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
-import { useTasks } from "@/hooks/use-tasks";
+import { useUserTasks } from "@/hooks/use-tasks";
 import { TaskModal } from "./task-modal";
 import styles from "./task-board.module.css";
 
 export function TaskBoard() {
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
-  const { data: tasks = [], isLoading } = useTasks();
+  const { data: tasks = [], isLoading } = useUserTasks();
 
   const todoTasks = tasks.filter((task) => task.status === "TODO");
   const inProgressTasks = tasks.filter((task) => task.status === "IN_PROGRESS");

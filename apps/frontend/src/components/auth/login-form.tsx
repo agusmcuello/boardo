@@ -50,7 +50,12 @@ export function LoginForm() {
 
       {error && <div className={styles.error}>{error}</div>}
 
-      <Button type="submit" disabled={isLoading} style={{ width: "100%" }}>
+      <Button
+        type="submit"
+        variant="login"
+        disabled={isLoading}
+        style={{ width: "100%" }}
+      >
         {isLoading ? "Iniciando sesión..." : "Iniciar Sesión"}
       </Button>
     </form>

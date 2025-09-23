@@ -2,7 +2,7 @@ import { ButtonHTMLAttributes, forwardRef } from "react";
 import styles from "./button.module.css";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "default" | "outline" | "ghost" | "destructive";
+  variant?: "default" | "outline" | "ghost" | "destructive" | "login";
   size?: "sm" | "md" | "lg";
   asChild?: boolean;
 }

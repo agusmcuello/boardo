@@ -25,6 +25,10 @@
   background-color: #2563eb;
   color: white;
 }
+.login {
+  background-color: #b04d87;
+  color: white;
+}
 
 .default:hover:not(:disabled) {
   background-color: #1d4ed8;
