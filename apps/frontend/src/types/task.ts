@@ -2,7 +2,7 @@ export interface Task {
   id: string;
   title: string;
   description?: string;
-  status: TaskStatus;
+  listId: number;
   priority: TaskPriority;
   dueDate?: Date;
   createdAt: Date;
@@ -10,7 +10,6 @@ export interface Task {
   userId: string;
 }
 
-export type TaskStatus = "TODO" | "IN_PROGRESS" | "DONE";
 export type TaskPriority = "LOW" | "MEDIUM" | "HIGH";
 
 export interface CreateTaskData {
@@ -18,8 +17,7 @@ export interface CreateTaskData {
   description?: string;
   priority: TaskPriority;
   dueDate?: Date;
+  listId: number; // 👈 obligatorio al crear
 }
 
-export interface UpdateTaskData extends Partial<CreateTaskData> {
-  status?: TaskStatus;
-}
+export interface UpdateTaskData extends Partial<CreateTaskData> {}

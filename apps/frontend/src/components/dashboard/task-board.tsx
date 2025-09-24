@@ -12,9 +12,9 @@ export function TaskBoard() {
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const { user } = useAuth();
   const { data: tasks = [], isLoading } = useUserTasks(user?.id);
-  const todoTasks = tasks.filter((task) => task.status === "TODO");
-  const inProgressTasks = tasks.filter((task) => task.status === "IN_PROGRESS");
-  const doneTasks = tasks.filter((task) => task.status === "DONE");
+  const todoTasks = tasks.filter((task) => task.listId === 1);
+  const inProgressTasks = tasks.filter((task) => task.listId === 2);
+  const doneTasks = tasks.filter((task) => task.listId === 3);
 
   if (isLoading) {
     return <div className={styles.loading}>Cargando tareas...</div>;

@@ -20,7 +20,7 @@ export function useAuth() {
       }
 
       try {
-        const res = await api.get<{ user: any }>("auth/me");
+        const res = await api.get<{ user: any }>("auth/mine");
         setUser(res.user);
       } catch (err: any) {
         console.error("❌ Error al validar token:", err.message);

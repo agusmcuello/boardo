@@ -11,7 +11,7 @@ export function TaskCard({
     <div className="taskCard" onClick={() => onOpen(task.id)}>
       <h4>{task.title}</h4>
       <div className="meta">
-        {task.priority} • {task.status}
+        {task.priority} • Lista {task.listId}
       </div>
     </div>
   );

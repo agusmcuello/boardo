@@ -79,7 +79,7 @@ router.post("/login", async (req, res) => {
 });
 
 // ✅ Obtener usuario actual
-router.get("/me", verifyJWT, async (req, res) => {
+router.get("/mine", verifyJWT, async (req, res) => {
   console.log("📥 Authorization:", req.headers["authorization"]);
   console.log("📥 Decoded user:", (req as any).user);
   try {
@@ -96,7 +96,7 @@ router.get("/me", verifyJWT, async (req, res) => {
 
     res.json({ user: rows[0] });
   } catch (err) {
-    console.error("❌ Error en /me:", err);
+    console.error("❌ Error en /mine:", err);
     res.status(500).json({ error: "Error al obtener usuario" });
   }
 });
