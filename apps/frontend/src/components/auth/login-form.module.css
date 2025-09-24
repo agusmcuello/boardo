@@ -1,6 +1,10 @@
 .form {
   width: 100%;
   max-width: 400px;
+  background-color: rgb(108, 142, 108);
+  padding: 20px 40px;
+  border-radius: 25px;
+  box-shadow: 5px 15px 5px 5px rgba(57, 130, 57, 0.2);
 }
 
 .fields {

@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function useAuth() {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [isReady, setIsReady] = useState(false);
+  const queryClient = useQueryClient(); // 👈 ya lo tenés disponible
 
   useEffect(() => {
     const init = async () => {
@@ -40,6 +42,7 @@ export function useAuth() {
     console.log("✅ API response:", res);
     api.setToken(res.token);
     setUser(res.user);
+    queryClient.invalidateQueries({ queryKey: ["userTasks"] });
     router.push("/dashboard");
   };
 
@@ -51,6 +54,7 @@ export function useAuth() {
   const logout = () => {
     api.setToken(null);
     setUser(null);
+    queryClient.clear();
     router.push("/auth/login");
   };
 

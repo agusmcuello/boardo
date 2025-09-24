@@ -13,7 +13,7 @@ import healthRoutes from "./routes/health";
 import authRoutes from "./routes/auth";
 import boardsRoutes from "./routes/boards";
 import listsRoutes from "./routes/lists";
-import cardsRoutes from "./routes/cards";
+import tasksRoutes from "./routes/tasks";
 
 const app = express();
 const allowedOrigins = ["http://localhost:3000"];
@@ -42,7 +42,7 @@ app.use("/health", healthRoutes);
 
 app.use("/api/boards", boardsRoutes);
 app.use("/api/lists", listsRoutes);
-app.use("/api/cards", cardsRoutes);
+app.use("/api/tasks", tasksRoutes);
 
 app.listen(PORT, () => {
   console.log(`🚀 Backend listening on http://localhost:${PORT}`);

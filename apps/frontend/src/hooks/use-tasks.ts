@@ -2,10 +2,11 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { Task } from "@/types/task";
 
-export function useUserTasks() {
+export function useUserTasks(userId?: number) {
   return useQuery<Task[]>({
-    queryKey: ["userTasks"],
-    queryFn: () => api.get("cards/user/me"),
+    queryKey: ["userTasks", userId], // <-- clave única por usuario
+    queryFn: () => api.get("tasks/user/me"),
+    enabled: !!userId, // solo se ejecuta si existe user
   });
 }
 

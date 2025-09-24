@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #f9fafb;
+  background-color: #15181bd2;
 }
 
 .box {
@@ -20,11 +20,11 @@
 .title {
   font-size: 28px;
   font-weight: 800;
-  color: #111827;
+  color: #ffffff;
   margin-bottom: 8px;
 }
 
 .subtitle {
   font-size: 14px;
-  color: #6b7280;
+  color: white;
 }

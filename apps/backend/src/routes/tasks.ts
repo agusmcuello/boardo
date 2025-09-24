@@ -4,7 +4,7 @@ import { verifyJWT } from "../middlewares/auth";
 
 const router = Router();
 
-// Obtener cards de una lista
+// Obtener tasks de una lista
 router.get("/:listId", verifyJWT, async (req, res) => {
   const { listId } = req.params;
   const [rows] = await pool.query("SELECT * FROM cards WHERE list_id = ?", [
@@ -64,11 +64,11 @@ router.get("/user/me", verifyJWT, async (req, res) => {
   res.json(rows);
 });
 
-// GET /api/cards/user
+// GET /api/task/user
 router.get("/user", verifyJWT, async (req, res) => {
   const userId = (req as any).user.id;
   try {
-    // retornar cards asignadas al user (o creadas por él si prefieres)
+    // retornar tasks asignadas al user (o creadas por él si prefieres)
     const [rows] = await pool.query(
       `SELECT c.*, l.board_id, b.title AS board_title
        FROM cards c
@@ -80,7 +80,7 @@ router.get("/user", verifyJWT, async (req, res) => {
     res.json(rows);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Error fetching user cards" });
+    res.status(500).json({ error: "Error fetching user tasks" });
   }
 });
 

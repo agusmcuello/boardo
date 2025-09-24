@@ -6,11 +6,12 @@ import { Modal } from "@/components/ui/modal";
 import { useUserTasks } from "@/hooks/use-tasks";
 import { TaskModal } from "./task-modal";
 import styles from "./task-board.module.css";
+import { useAuth } from "@/hooks/use-auth";
 
 export function TaskBoard() {
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
-  const { data: tasks = [], isLoading } = useUserTasks();
-
+  const { user } = useAuth();
+  const { data: tasks = [], isLoading } = useUserTasks(user?.id);
   const todoTasks = tasks.filter((task) => task.status === "TODO");
   const inProgressTasks = tasks.filter((task) => task.status === "IN_PROGRESS");
   const doneTasks = tasks.filter((task) => task.status === "DONE");
