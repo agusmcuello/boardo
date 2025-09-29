@@ -4,7 +4,7 @@ import { verifyJWT } from "../middlewares/auth";
 
 const router = Router();
 
-// ✅ Primero los específicos
+// ✅ Obtener las task del user
 router.get("/user/mine", verifyJWT, async (req, res) => {
   const userId = (req as any).user.id;
   const [rows] = await pool.query(
@@ -138,6 +138,69 @@ router.put("/:id", verifyJWT, async (req, res) => {
     conn.release();
     console.error("Error moving task:", err);
     res.status(500).json({ error: "Error moving task" });
+  }
+});
+
+// Crear card (POST /api/task)
+// Body accepted: { listId, title, description?, position?, assignee_id?, priority? }
+router.post("/", verifyJWT, async (req, res) => {
+  const userId = (req as any).user.id;
+  const {
+    listId, // number (id de la lista/columna)
+    title,
+    description = "",
+    position,
+    assignee_id = null,
+    priority = "MEDIUM",
+  } = req.body;
+
+  if (!listId || !title) {
+    return res.status(400).json({ error: "listId y title son obligatorios" });
+  }
+
+  const conn = await pool.getConnection();
+  try {
+    await conn.beginTransaction();
+
+    // si no envían position, calculamos el siguiente (max + 1)
+    let finalPosition = Number(position) || null;
+    if (!finalPosition) {
+      const [rows]: any = await conn.query(
+        "SELECT COALESCE(MAX(position), 0) AS maxPos FROM cards WHERE list_id = ?",
+        [listId]
+      );
+      const maxPos = rows && rows[0] ? Number(rows[0].maxPos) : 0;
+      finalPosition = maxPos + 1;
+    } else {
+      // si envían position, shift de posiciones >= position en la lista objetivo
+      await conn.query(
+        "UPDATE cards SET position = position + 1 WHERE list_id = ? AND position >= ?",
+        [listId, finalPosition]
+      );
+    }
+
+    const [result]: any = await conn.query(
+      `INSERT INTO cards
+        (list_id, title, description, position, priority, assignee_id, created_by)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [listId, title, description, finalPosition, priority, assignee_id, userId]
+    );
+
+    // devolver la fila completa creada (sel después del insert)
+    const [createdRows]: any = await conn.query(
+      "SELECT c.*, l.title AS listTitle FROM cards c JOIN lists l ON c.list_id = l.id WHERE c.id = ?",
+      [result.insertId]
+    );
+
+    await conn.commit();
+    conn.release();
+
+    res.status(201).json(createdRows[0]);
+  } catch (err) {
+    await conn.rollback();
+    conn.release();
+    console.error("Error creating card:", err);
+    res.status(500).json({ error: "Error creating card" });
   }
 });
 

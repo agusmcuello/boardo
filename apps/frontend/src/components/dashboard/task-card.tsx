@@ -3,7 +3,7 @@ import React from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Task } from "@/types/task";
-import styles from "./task-card.module.css";
+import Card from "../ui/card";
 
 export default function TaskCardSortable({ task }: { task: Task }) {
   const {
@@ -26,18 +26,8 @@ export default function TaskCardSortable({ task }: { task: Task }) {
   };
 
   return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...listeners}
-      className={styles.taskCard}
-    >
-      <h4 className={styles.taskTitle}>{task.title}</h4>
-      {task.description && (
-        <p className={styles.taskDescription}>{task.description}</p>
-      )}
-      <div className={styles.priority}>{task.priority}</div>
+    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+      <Card task={task} />
     </div>
   );
 }

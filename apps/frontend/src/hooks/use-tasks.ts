@@ -45,20 +45,34 @@ export function useUserTasks(userId?: number) {
   });
 }
 
-/* opcional: hook para crear task */
-export function useCreateTask() {
+/*crear task */
+export function useCreateTask(userId?: number) {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (payload: any) => api.post("tasks", payload),
-    onSuccess: () => {
-      // invalidamos todas las queries que empiecen con "userTasks"
-      qc.invalidateQueries({
-        predicate: (query: Query) => query.queryKey[0] === "userTasks",
-      } as any);
+    mutationFn: (payload: {
+      listId: number;
+      title: string;
+      description?: string;
+      priority?: "LOW" | "MEDIUM" | "HIGH";
+      assignee_id?: number | null;
+      position?: number | null;
+    }) => api.post("tasks", payload),
+
+    onSuccess: (created) => {
+      // invalidar las queries del user (si usás ["userTasks", userId] como clave)
+      if (userId) {
+        qc.invalidateQueries({ queryKey: ["userTasks", userId] });
+      } else {
+        // fallback: invalidar todas las userTasks
+        qc.invalidateQueries({
+          predicate: (q) => (q.queryKey as any)[0] === "userTasks",
+        });
+      }
     },
   });
 }
 
+/*mover task */
 export function useMoveTask() {
   const qc = useQueryClient();
 

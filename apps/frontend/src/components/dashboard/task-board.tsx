@@ -14,6 +14,10 @@ import {
 import { useUserTasks, useMoveTask } from "@/hooks/use-tasks";
 import { useAuth } from "@/hooks/use-auth";
 import Column from "./column";
+import Card from "../ui/card";
+import { TaskForm } from "./task-form";
+import { Modal } from "../ui/modal";
+import { Button } from "../ui/button";
 import styles from "./task-board.module.css";
 
 export function TaskBoard() {
@@ -21,6 +25,7 @@ export function TaskBoard() {
   const { data: tasks = [], isLoading } = useUserTasks(user?.id);
   const moveMutation = useMoveTask();
   const sensors = useSensors(useSensor(PointerSensor));
+  const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
 
   const [localTasks, setLocalTasks] = useState<Task[]>([]);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
@@ -115,6 +120,7 @@ export function TaskBoard() {
     >
       <div className={styles.header}>
         <h1 className={styles.title}>Mis Tareas</h1>
+        <Button onClick={() => setIsTaskModalOpen(true)}>Nueva Tarea</Button>
       </div>
 
       <div className={styles.columns}>
@@ -125,16 +131,15 @@ export function TaskBoard() {
 
       {/* 🔥 DragOverlay para que el item siga al cursor */}
       <DragOverlay>
-        {activeTask ? (
-          <div className={styles.taskCard}>
-            <h4 className={styles.taskTitle}>{activeTask.title}</h4>
-            {activeTask.description && (
-              <p className={styles.taskDescription}>{activeTask.description}</p>
-            )}
-            <div className={styles.priority}>{activeTask.priority}</div>
-          </div>
-        ) : null}
+        {activeTask ? <Card task={activeTask} /> : null}
       </DragOverlay>
+      <Modal
+        isOpen={isTaskModalOpen}
+        onClose={() => setIsTaskModalOpen(false)}
+        title="Nueva Tarea"
+      >
+        <TaskForm onClose={() => setIsTaskModalOpen(false)} />
+      </Modal>
     </DndContext>
   );
 }
