@@ -1,7 +1,6 @@
 // components/dashboard/task-board.tsx
 "use client";
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Task } from "@/types/task";
 import {
   DndContext,
@@ -10,6 +9,7 @@ import {
   useSensor,
   useSensors,
   DragEndEvent,
+  DragOverlay,
 } from "@dnd-kit/core";
 import { useUserTasks, useMoveTask } from "@/hooks/use-tasks";
 import { useAuth } from "@/hooks/use-auth";
@@ -23,6 +23,8 @@ export function TaskBoard() {
   const sensors = useSensors(useSensor(PointerSensor));
 
   const [localTasks, setLocalTasks] = useState<Task[]>([]);
+  const [activeTask, setActiveTask] = useState<Task | null>(null);
+
   useEffect(() => {
     setLocalTasks(tasks);
   }, [tasks]);
@@ -42,7 +44,10 @@ export function TaskBoard() {
 
   const onDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    if (!over) return;
+    if (!over) {
+      setActiveTask(null);
+      return;
+    }
 
     const activeId = String(active.id);
     const sourceListId = Number(active.data?.current?.listId);
@@ -62,7 +67,10 @@ export function TaskBoard() {
       }
     }
 
-    if (!destListId) return;
+    if (!destListId) {
+      setActiveTask(null);
+      return;
+    }
 
     const destArr = groups[destListId] ?? [];
     const overIndex = destArr.findIndex((t) => t.id === String(over.id));
@@ -73,19 +81,22 @@ export function TaskBoard() {
         t.id === activeId
           ? {
               ...t,
-              listId: destListId, // ✅ ya es number, nunca null
-              position: destIndex + 1, // ✅ number
+              listId: destListId, // ✅ actualizado
+              position: destIndex + 1,
             }
           : t
       );
     });
 
-    // 🔥 then call mutation (backend)
+    // 🔥 actualización al backend
     moveMutation.mutate({
       id: activeId,
       listId: destListId,
       position: destIndex + 1,
     });
+
+    // reset del overlay
+    setActiveTask(null);
   };
 
   if (isLoading) return <div>Loading tasks...</div>;
@@ -94,7 +105,13 @@ export function TaskBoard() {
     <DndContext
       sensors={sensors}
       collisionDetection={closestCenter}
+      onDragStart={(event) => {
+        const activeId = String(event.active.id);
+        const found = localTasks.find((t) => t.id === activeId);
+        if (found) setActiveTask(found);
+      }}
       onDragEnd={onDragEnd}
+      onDragCancel={() => setActiveTask(null)}
     >
       <div className={styles.header}>
         <h1 className={styles.title}>Mis Tareas</h1>
@@ -105,6 +122,19 @@ export function TaskBoard() {
         <Column listId={2} title="En Progreso" tasks={groups[2]} />
         <Column listId={3} title="Completadas" tasks={groups[3]} />
       </div>
+
+      {/* 🔥 DragOverlay para que el item siga al cursor */}
+      <DragOverlay>
+        {activeTask ? (
+          <div className={styles.taskCard}>
+            <h4 className={styles.taskTitle}>{activeTask.title}</h4>
+            {activeTask.description && (
+              <p className={styles.taskDescription}>{activeTask.description}</p>
+            )}
+            <div className={styles.priority}>{activeTask.priority}</div>
+          </div>
+        ) : null}
+      </DragOverlay>
     </DndContext>
   );
 }
