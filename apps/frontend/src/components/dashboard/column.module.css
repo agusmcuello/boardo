@@ -1,0 +1,15 @@
+.column {
+  background-color: #2c7ac9;
+  border-radius: 8px;
+  padding: 16px;
+  min-height: 400px;
+}
+
+.columnTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 0 16px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #e5e7eb;
+}

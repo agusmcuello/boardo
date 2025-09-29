@@ -3,8 +3,8 @@ export interface Task {
   title: string;
   description?: string;
   listId: number;
-  priority: TaskPriority;
-  dueDate?: Date;
+  position: number;
+  priority: "LOW" | "MEDIUM" | "HIGH";
   createdAt: Date;
   updatedAt: Date;
   userId: string;

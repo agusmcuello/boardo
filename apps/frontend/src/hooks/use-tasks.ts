@@ -14,11 +14,11 @@ function normalizeTask(r: RawTask): Task {
   return {
     id: String(r.id),
     title: r.title,
-    description: r.description ?? r.description,
+    description: r.description ?? undefined,
     // soporta tanto listId (camel) como list_id (snake)
-    listId: r.listId ?? r.list_id ?? null,
+    listId: r.listId ?? r.list_id ?? 0,
+    position: r.position ?? 0, // 👈 agregar este campo
     priority: r.priority ?? "MEDIUM",
-    // normalizamos fechas si vienen
     createdAt: r.created_at
       ? new Date(r.created_at)
       : r.createdAt
@@ -29,7 +29,6 @@ function normalizeTask(r: RawTask): Task {
       : r.updatedAt
       ? new Date(r.updatedAt)
       : new Date(),
-    // userId puede venir como createdBy / created_by
     userId: String(r.createdBy ?? r.created_by ?? r.userId ?? ""),
   };
 }
@@ -50,12 +49,52 @@ export function useUserTasks(userId?: number) {
 export function useCreateTask() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (payload: any) => api.post("cards", payload),
+    mutationFn: (payload: any) => api.post("tasks", payload),
     onSuccess: () => {
       // invalidamos todas las queries que empiecen con "userTasks"
       qc.invalidateQueries({
         predicate: (query: Query) => query.queryKey[0] === "userTasks",
       } as any);
+    },
+  });
+}
+
+export function useMoveTask() {
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: { id: string; listId: number; position: number }) =>
+      api.put(`tasks/${payload.id}`, payload),
+
+    // ⚡ update optimista
+    onMutate: async (payload) => {
+      await qc.cancelQueries({ queryKey: ["userTasks"] });
+
+      const prev = qc.getQueryData<Task[]>(["userTasks"]);
+
+      if (prev) {
+        // movemos en memoria
+        const newTasks = prev.map((t) =>
+          t.id === payload.id
+            ? { ...t, listId: payload.listId, position: payload.position }
+            : t
+        );
+        qc.setQueryData(["userTasks"], newTasks);
+      }
+
+      return { prev };
+    },
+
+    onError: (_err, _vars, ctx) => {
+      // rollback si falla
+      if (ctx?.prev) {
+        qc.setQueryData(["userTasks"], ctx.prev);
+      }
+    },
+
+    onSettled: () => {
+      // refresco para alinear posiciones
+      qc.invalidateQueries({ queryKey: ["userTasks"] });
     },
   });
 }

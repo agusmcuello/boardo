@@ -80,8 +80,6 @@ router.post("/login", async (req, res) => {
 
 // ✅ Obtener usuario actual
 router.get("/mine", verifyJWT, async (req, res) => {
-  console.log("📥 Authorization:", req.headers["authorization"]);
-  console.log("📥 Decoded user:", (req as any).user);
   try {
     const userId = (req as any).user.id;
 
