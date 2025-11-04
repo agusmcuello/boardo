@@ -5,7 +5,13 @@ import { CSS } from "@dnd-kit/utilities";
 import { Task } from "@/types/task";
 import Card from "../ui/card";
 
-export default function TaskCardSortable({ task }: { task: Task }) {
+export default function TaskCardSortable({
+  task,
+  onOpen,
+}: {
+  task: Task;
+  onOpen: (task: Task) => void;
+}) {
   const {
     attributes,
     listeners,
@@ -22,11 +28,23 @@ export default function TaskCardSortable({ task }: { task: Task }) {
     transform: CSS.Transform.toString(transform) || undefined,
     transition,
     touchAction: "manipulation",
-    opacity: isDragging ? 0 : 1, // 👈 ocultamos el original mientras se arrastra
+    opacity: isDragging ? 0 : 1,
+    pointerEvents: isDragging ? "none" : "auto",
+    cursor: "grab",
   };
 
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners} // 👈 sigue aplicando drag a toda la card
+      onClick={() => {
+        if (!isDragging) {
+          onOpen(task);
+        }
+      }}
+    >
       <Card task={task} />
     </div>
   );

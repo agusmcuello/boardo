@@ -14,10 +14,12 @@ export default function Column({
   listId,
   title,
   tasks,
+  onOpen,
 }: {
   listId: number;
   title: string;
   tasks: Task[];
+  onOpen: (task: Task) => void; // 👈 lo agregamos acá
 }) {
   const { setNodeRef } = useDroppable({
     id: `column-${listId}`,
@@ -35,7 +37,7 @@ export default function Column({
         strategy={verticalListSortingStrategy}
       >
         {tasks.map((task) => (
-          <TaskCardSortable key={task.id} task={task} />
+          <TaskCardSortable key={task.id} task={task} onOpen={onOpen} />
         ))}
       </SortableContext>
     </div>

@@ -112,3 +112,35 @@ export function useMoveTask() {
     },
   });
 }
+
+export function useDeleteTask() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => api.del(`tasks/${id}`),
+    onMutate: async (id: string) => {
+      await qc.cancelQueries({ queryKey: ["userTasks"] });
+      const previous = qc.getQueriesData<any>({ queryKey: ["userTasks"] });
+
+      qc.getQueriesData({ queryKey: ["userTasks"] }).forEach(
+        ([qk, data]: any) => {
+          if (Array.isArray(data)) {
+            const newArr = data.filter((t: any) => String(t.id) !== String(id));
+            qc.setQueryData(qk as any, newArr);
+          }
+        }
+      );
+
+      return { previous };
+    },
+    onError: (_err, _id, context: any) => {
+      if (context?.previous) {
+        context.previous.forEach(([qk, data]: any) => {
+          qc.setQueryData(qk as any, data);
+        });
+      }
+    },
+    onSettled: () => {
+      qc.invalidateQueries({ queryKey: ["userTasks"] });
+    },
+  });
+}

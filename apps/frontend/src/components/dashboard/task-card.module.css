@@ -1,5 +1,5 @@
 .taskCard {
-  background-color: white;
+  position: relative;
   border: 1px solid #e5e7eb;
   border-radius: 6px;
   padding: 16px;
@@ -37,4 +37,23 @@
 .high {
   background-color: #fee2e2;
   color: #991b1b;
+}
+
+.taskCard:hover {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.deleteBtn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.taskCard:hover .deleteBtn {
+  opacity: 1;
 }

@@ -61,7 +61,6 @@ router.get("/:listId", verifyJWT, async (req, res) => {
 });
 
 // PUT /api/tasks/:id
-// Body: { listId: number, position: number }
 router.put("/:id", verifyJWT, async (req, res) => {
   const taskId = Number(req.params.id);
   const { listId, position } = req.body;
@@ -141,8 +140,7 @@ router.put("/:id", verifyJWT, async (req, res) => {
   }
 });
 
-// Crear card (POST /api/task)
-// Body accepted: { listId, title, description?, position?, assignee_id?, priority? }
+// Crear task (POST /api/task)
 router.post("/", verifyJWT, async (req, res) => {
   const userId = (req as any).user.id;
   const {
@@ -201,6 +199,56 @@ router.post("/", verifyJWT, async (req, res) => {
     conn.release();
     console.error("Error creating card:", err);
     res.status(500).json({ error: "Error creating card" });
+  }
+});
+
+// apps/backend/src/routes/tasks.ts
+router.delete("/:id", verifyJWT, async (req, res) => {
+  const taskId = Number(req.params.id);
+  const userId = (req as any).user.id;
+
+  const conn = await pool.getConnection();
+  try {
+    await conn.beginTransaction();
+
+    // 1) obtener la task actual (list_id y position y created_by/assignee)
+    const [rows]: any = await conn.query(
+      "SELECT list_id, position, created_by, assignee_id FROM cards WHERE id = ?",
+      [taskId]
+    );
+    if (!rows || rows.length === 0) {
+      await conn.rollback();
+      conn.release();
+      return res.status(404).json({ error: "Card not found" });
+    }
+    const task = rows[0];
+
+    // 2) comprobar permisos: solo creator o assignee (ajusta si lo querés distinto)
+    if (task.created_by !== userId && task.assignee_id !== userId) {
+      await conn.rollback();
+      conn.release();
+      return res
+        .status(403)
+        .json({ error: "No tienes permiso para eliminar esta tarea" });
+    }
+
+    // 3) borrar la task
+    await conn.query("DELETE FROM cards WHERE id = ?", [taskId]);
+
+    // 4) compactar posiciones: decrementar los position > deleted.position en la misma lista
+    await conn.query(
+      "UPDATE cards SET position = position - 1 WHERE list_id = ? AND position > ?",
+      [task.list_id, task.position]
+    );
+
+    await conn.commit();
+    conn.release();
+    res.json({ ok: true });
+  } catch (err) {
+    await conn.rollback();
+    conn.release();
+    console.error("Error deleting card:", err);
+    res.status(500).json({ error: "Error deleting card" });
   }
 });
 

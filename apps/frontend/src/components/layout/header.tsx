@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import styles from "./header.module.css";
+import Logo from "@/components/ui/icons/Logo";
 
 export function Header() {
   const { user, logout } = useAuth();
@@ -11,7 +12,7 @@ export function Header() {
     <header className={styles.header}>
       <div className={styles.container}>
         <div className={styles.logo}>
-          <h1>Boardo</h1>
+          <Logo width={40} />
         </div>
 
         <div className={styles.userSection}>

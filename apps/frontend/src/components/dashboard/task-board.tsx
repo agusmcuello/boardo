@@ -19,20 +19,39 @@ import { TaskForm } from "./task-form";
 import { Modal } from "../ui/modal";
 import { Button } from "../ui/button";
 import styles from "./task-board.module.css";
+import { TaskDetailsModal } from "./task-details-modal";
 
 export function TaskBoard() {
   const { user } = useAuth();
   const { data: tasks = [], isLoading } = useUserTasks(user?.id);
   const moveMutation = useMoveTask();
-  const sensors = useSensors(useSensor(PointerSensor));
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
-
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [localTasks, setLocalTasks] = useState<Task[]>([]);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5, // 👈 recién después de mover 5px empieza drag
+      },
+    })
+  );
 
   useEffect(() => {
     setLocalTasks(tasks);
   }, [tasks]);
+
+  const handleOpenTask = (task: Task) => {
+    setSelectedTask(task);
+    setIsDetailsOpen(true);
+  };
+
+  const handleCloseTask = () => {
+    setSelectedTask(null);
+    setIsDetailsOpen(false);
+  };
 
   // groups como Record<number, Task[]>
   const groups: Record<number, Task[]> = {
@@ -107,39 +126,61 @@ export function TaskBoard() {
   if (isLoading) return <div>Loading tasks...</div>;
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragStart={(event) => {
-        const activeId = String(event.active.id);
-        const found = localTasks.find((t) => t.id === activeId);
-        if (found) setActiveTask(found);
-      }}
-      onDragEnd={onDragEnd}
-      onDragCancel={() => setActiveTask(null)}
-    >
-      <div className={styles.header}>
-        <h1 className={styles.title}>Mis Tareas</h1>
-        <Button onClick={() => setIsTaskModalOpen(true)}>Nueva Tarea</Button>
-      </div>
-
-      <div className={styles.columns}>
-        <Column listId={1} title="Pendientes" tasks={groups[1]} />
-        <Column listId={2} title="En Progreso" tasks={groups[2]} />
-        <Column listId={3} title="Completadas" tasks={groups[3]} />
-      </div>
-
-      {/* 🔥 DragOverlay para que el item siga al cursor */}
-      <DragOverlay>
-        {activeTask ? <Card task={activeTask} /> : null}
-      </DragOverlay>
-      <Modal
-        isOpen={isTaskModalOpen}
-        onClose={() => setIsTaskModalOpen(false)}
-        title="Nueva Tarea"
+    <>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragStart={(event) => {
+          const activeId = String(event.active.id);
+          const found = localTasks.find((t) => t.id === activeId);
+          if (found) setActiveTask(found);
+        }}
+        onDragEnd={onDragEnd}
+        onDragCancel={() => setActiveTask(null)}
       >
-        <TaskForm onClose={() => setIsTaskModalOpen(false)} />
-      </Modal>
-    </DndContext>
+        <div className={styles.header}>
+          <h1 className={styles.title}>Mis Tareas</h1>
+          <Button onClick={() => setIsTaskModalOpen(true)}>Nueva Tarea</Button>
+        </div>
+
+        <div className={styles.columns}>
+          <Column
+            listId={1}
+            title="Pendientes"
+            tasks={groups[1]}
+            onOpen={handleOpenTask}
+          />
+          <Column
+            listId={2}
+            title="En Progreso"
+            tasks={groups[2]}
+            onOpen={handleOpenTask}
+          />
+          <Column
+            listId={3}
+            title="Completadas"
+            tasks={groups[3]}
+            onOpen={handleOpenTask}
+          />
+        </div>
+
+        {/* 🔥 DragOverlay para que el item siga al cursor */}
+        <DragOverlay style={{ zIndex: 9999, pointerEvents: "none" }}>
+          {activeTask ? <Card task={activeTask} /> : null}
+        </DragOverlay>
+        <Modal
+          isOpen={isTaskModalOpen}
+          onClose={() => setIsTaskModalOpen(false)}
+          title="Nueva Tarea"
+        >
+          <TaskForm onClose={() => setIsTaskModalOpen(false)} />
+        </Modal>
+      </DndContext>
+      <TaskDetailsModal
+        task={selectedTask}
+        isOpen={isDetailsOpen}
+        onClose={handleCloseTask}
+      />
+    </>
   );
 }
