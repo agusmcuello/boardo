@@ -1,10 +1,12 @@
 "use client";
 
+import { useEffect } from "react";
 import { Task } from "@/types/task";
 import { Modal } from "../ui/modal";
 import { Button } from "../ui/button";
 import { useDeleteTask } from "@/hooks/use-tasks";
 import { useState } from "react";
+import { useAuth } from "@/hooks/use-auth";
 
 export function TaskDetailsModal({
   isOpen,
@@ -15,9 +17,17 @@ export function TaskDetailsModal({
   onClose: () => void;
   task: Task | null;
 }) {
-  const deleteTask = useDeleteTask();
+  const { user } = useAuth();
+  const deleteTask = useDeleteTask(user?.id);
   const [isDeleting, setIsDeleting] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setConfirmDelete(false);
+      setIsDeleting(false);
+    }
+  }, [isOpen, task]);
 
   if (!task) return null;
 

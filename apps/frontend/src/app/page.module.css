@@ -14,20 +14,22 @@
 .main {
   width: 100%;
   max-width: 900px;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.6),
-    rgba(255, 255, 255, 0.3)
-  );
+  background: linear-gradient(180deg, var(--brand-300), var(--brand-700));
   backdrop-filter: blur(6px);
   border-radius: 16px;
   padding: 48px;
   box-shadow: var(--shadow-md);
+  transition: transform 0.08s ease-out, box-shadow 0.6s ease;
+  will-change: transform, box-shadow;
+  cursor: pointer;
   display: flex;
   flex-direction: column;
   gap: 20px;
   align-items: center;
   text-align: center;
+}
+.main:hover {
+  box-shadow: 0 10px 20px var(--brand-300);
 }
 
 /* 👇 ahora h1 está "dentro" de .main */
@@ -38,10 +40,10 @@
   color: var(--brand-900);
 }
 
-.main p.lead {
+.main .lead {
   margin: 0;
-  color: var(--muted);
-  font-size: 16px;
+  color: var(--brand-700);
+  font-size: 1rem;
 }
 
 .ctas {
@@ -53,13 +55,14 @@
 .ctaPrimary {
   background: var(--brand-500);
   color: white;
-  padding: 12px 20px;
+  padding: 12px 40px;
   border-radius: 9999px;
   text-decoration: none;
   font-weight: 600;
   display: inline-flex;
   align-items: center;
-  transition: background 0.2s ease;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
 }
 
 .ctaPrimary:hover {
@@ -68,21 +71,35 @@
 
 .ctaSecondary {
   background: transparent;
-  color: var(--brand-900);
+  color: var(--brand-300);
   border-radius: 9999px;
-  padding: 12px 20px;
+  padding: 12px 40px;
   border: 1px solid rgba(15, 23, 42, 0.06);
-  transition: border 0.2s ease;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
 }
 
 .ctaSecondary:hover {
-  border-color: var(--brand-500);
+  border-color: var(--brand-300);
 }
 
 .footer {
   margin-top: 12px;
   color: var(--muted);
   font-size: 13px;
+}
+
+.footer .ctaSecondary {
+  font-size: 1rem;
+  border: none;
+  border-bottom: 1px solid rgba(0, 67, 224, 0.06);
+  text-decoration: none;
+  padding: 12px 20px;
+}
+
+.footer .ctaSecondary:hover {
+  border-color: var(--brand-300);
+  box-shadow: 0 2px var(--brand-300);
 }
 
 @media (max-width: 600px) {

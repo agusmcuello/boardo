@@ -16,6 +16,7 @@ export function Header() {
         </div>
 
         <div className={styles.userSection}>
+          {user?.guest && <div className="chip">Guest • Local demo</div>}
           <span className={styles.userEmail}>{user?.email}</span>
           <Button variant="outline" size="sm" onClick={logout}>
             Cerrar Sesión

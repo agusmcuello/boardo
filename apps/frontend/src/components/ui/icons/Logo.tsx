@@ -28,7 +28,7 @@ export default function Logo({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g clip-path="url(#clip0_5_19)">
+      <g clipPath="url(#clip0_5_19)">
         <mask
           id="mask0_5_19"
           style={{ maskType: "alpha" }}
@@ -61,7 +61,7 @@ export default function Logo({
           <path
             d="M18.0781 179V34.4688H67.1992C81.7174 34.4688 92.7526 37.2031 100.305 42.6719C107.922 48.1406 111.73 56.1159 111.73 66.5977C111.73 83.9805 100.174 96.2852 77.0625 103.512C104.081 110.087 117.59 123.336 117.59 143.258C117.59 154.781 113.618 163.635 105.676 169.82C97.7982 175.94 86.4701 179 71.6914 179H18.0781ZM46.3984 94.625H53.5273C61.9909 94.625 68.6966 92.5417 73.6445 88.375C78.6576 84.2083 81.1641 78.5443 81.1641 71.3828C81.1641 64.7422 79.1458 60.25 75.1094 57.9062C71.138 55.4974 63.5859 54.293 52.4531 54.293H46.3984V94.625ZM46.3984 158.492H52.8438C65.474 158.492 74.1654 157.158 78.918 154.488C83.7357 151.754 86.1445 146.806 86.1445 139.645C86.1445 132.288 82.9219 126.168 76.4766 121.285C70.0964 116.402 62.0234 113.961 52.2578 113.961H46.3984V158.492Z"
             fill="black"
-            fill-opacity="0.79"
+            fillOpacity="0.79"
           />
         </g>
       </g>
@@ -99,8 +99,8 @@ export default function Logo({
           y2="205"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#42BAC5" />
-          <stop offset="1" stop-color="#1F1D2A" />
+          <stop stopColor="#42BAC5" />
+          <stop offset="1" stopColor="#1F1D2A" />
         </linearGradient>
         <linearGradient
           id="paint1_linear_5_19"
@@ -110,8 +110,8 @@ export default function Logo({
           y2="137"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#42BAC5" />
-          <stop offset="1" stop-color="#205A5F" />
+          <stop stopColor="#42BAC5" />
+          <stop offset="1" stopColor="#205A5F" />
         </linearGradient>
         <linearGradient
           id="paint2_linear_5_19"
@@ -121,8 +121,8 @@ export default function Logo({
           y2="137"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#42BAC5" />
-          <stop offset="1" stop-color="#205A5F" />
+          <stop stopColor="#42BAC5" />
+          <stop offset="1" stopColor="#205A5F" />
         </linearGradient>
         <linearGradient
           id="paint3_linear_5_19"
@@ -132,8 +132,8 @@ export default function Logo({
           y2="137"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#42BAC5" />
-          <stop offset="1" stop-color="#205A5F" />
+          <stop stopColor="#42BAC5" />
+          <stop offset="1" stopColor="#205A5F" />
         </linearGradient>
         <linearGradient
           id="paint4_linear_5_19"
@@ -143,8 +143,8 @@ export default function Logo({
           y2="137"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#42BAC5" />
-          <stop offset="1" stop-color="#205A5F" />
+          <stop stopColor="#42BAC5" />
+          <stop offset="1" stopColor="#205A5F" />
         </linearGradient>
         <linearGradient
           id="paint5_linear_5_19"
@@ -154,8 +154,8 @@ export default function Logo({
           y2="137"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#42BAC5" />
-          <stop offset="1" stop-color="#205A5F" />
+          <stop stopColor="#42BAC5" />
+          <stop offset="1" stopColor="#205A5F" />
         </linearGradient>
         <linearGradient
           id="paint6_linear_5_19"
@@ -165,8 +165,8 @@ export default function Logo({
           y2="137"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#42BAC5" />
-          <stop offset="1" stop-color="#205A5F" />
+          <stop stopColor="#42BAC5" />
+          <stop offset="1" stopColor="#205A5F" />
         </linearGradient>
         <clipPath id="clip0_5_19">
           <rect width="131" height="184" fill="white" />

@@ -54,7 +54,7 @@ export function LoginForm() {
         type="submit"
         variant="login"
         disabled={isLoading}
-        style={{ width: "100%" }}
+        className={styles.button}
       >
         {isLoading ? "Iniciando sesión..." : "Iniciar Sesión"}
       </Button>

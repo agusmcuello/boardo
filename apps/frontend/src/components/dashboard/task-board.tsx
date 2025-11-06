@@ -24,7 +24,7 @@ import { TaskDetailsModal } from "./task-details-modal";
 export function TaskBoard() {
   const { user } = useAuth();
   const { data: tasks = [], isLoading } = useUserTasks(user?.id);
-  const moveMutation = useMoveTask();
+  const moveMutation = useMoveTask(user?.id);
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
@@ -139,7 +139,7 @@ export function TaskBoard() {
         onDragCancel={() => setActiveTask(null)}
       >
         <div className={styles.header}>
-          <h1 className={styles.title}>Mis Tareas</h1>
+          <h1 className={styles.title}>My tasks</h1>
           <Button onClick={() => setIsTaskModalOpen(true)}>Nueva Tarea</Button>
         </div>
 
