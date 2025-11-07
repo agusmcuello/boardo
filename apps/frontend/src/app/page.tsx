@@ -4,7 +4,6 @@ import Link from "next/link";
 import styles from "./page.module.css";
 import Logo from "@/components/ui/icons/Logo";
 import { useRef } from "react";
-import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 
 export default function Home() {

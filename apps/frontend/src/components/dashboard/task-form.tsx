@@ -7,13 +7,19 @@ import { useAuth } from "@/hooks/use-auth";
 import { Input } from "../ui/input";
 import styles from "./task-form.module.css";
 
-export function TaskForm({ onClose }: { onClose: () => void }) {
+export function TaskForm({
+  onClose,
+  initialListId,
+}: {
+  onClose: () => void;
+  initialListId?: number;
+}) {
   const { user } = useAuth();
   const createTask = useCreateTask(Number(user?.id));
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState<"LOW" | "MEDIUM" | "HIGH">("MEDIUM");
-  const [listId, setListId] = useState<number>(1); // default a Pendientes
+  const [listId, setListId] = useState<number>(initialListId ?? 1);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

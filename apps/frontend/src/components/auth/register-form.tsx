@@ -8,10 +8,12 @@ import styles from "./register-form.module.css";
 
 export function RegisterForm() {
   const { register } = useAuth();
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -20,7 +22,7 @@ export function RegisterForm() {
     setError("");
 
     if (password !== confirmPassword) {
-      setError("Las contraseñas no coinciden");
+      setError("Passwords do not match");
       return;
     }
 
@@ -28,7 +30,7 @@ export function RegisterForm() {
       setIsLoading(true);
       await register(name, email, password);
     } catch (err: any) {
-      setError(err.message || "Error al crear la cuenta");
+      setError(err.message || "Something went wrong");
     } finally {
       setIsLoading(false);
     }
@@ -38,31 +40,34 @@ export function RegisterForm() {
     <form onSubmit={handleSubmit} className={styles.form}>
       <div className={styles.fields}>
         <Input
-          label="Nombre completo"
+          label="Full name"
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
-          placeholder="Tu nombre completo"
+          placeholder="John Doe"
         />
+
         <Input
           label="Email"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          placeholder="tu@email.com"
+          placeholder="you@email.com"
         />
+
         <Input
-          label="Contraseña"
+          label="Password"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
           placeholder="••••••••"
         />
+
         <Input
-          label="Confirmar contraseña"
+          label="Confirm password"
           type="password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
@@ -73,8 +78,8 @@ export function RegisterForm() {
 
       {error && <div className={styles.error}>{error}</div>}
 
-      <Button type="submit" disabled={isLoading} style={{ width: "100%" }}>
-        {isLoading ? "Creando cuenta..." : "Crear Cuenta"}
+      <Button type="submit" disabled={isLoading} className={styles.button}>
+        {isLoading ? "Creating account..." : "Create account"}
       </Button>
     </form>
   );

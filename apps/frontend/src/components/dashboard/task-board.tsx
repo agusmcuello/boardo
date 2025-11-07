@@ -1,5 +1,5 @@
-// components/dashboard/task-board.tsx
 "use client";
+
 import React, { useState, useEffect } from "react";
 import { Task } from "@/types/task";
 import {
@@ -18,24 +18,24 @@ import Card from "../ui/card";
 import { TaskForm } from "./task-form";
 import { Modal } from "../ui/modal";
 import { Button } from "../ui/button";
-import styles from "./task-board.module.css";
 import { TaskDetailsModal } from "./task-details-modal";
+import styles from "./task-board.module.css";
 
 export function TaskBoard() {
   const { user } = useAuth();
   const { data: tasks = [], isLoading } = useUserTasks(user?.id);
   const moveMutation = useMoveTask(user?.id);
+
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [localTasks, setLocalTasks] = useState<Task[]>([]);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
+  const [initialListId, setInitialListId] = useState<number | null>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 5, // 👈 recién después de mover 5px empieza drag
-      },
+      activationConstraint: { distance: 5 },
     })
   );
 
@@ -53,7 +53,6 @@ export function TaskBoard() {
     setIsDetailsOpen(false);
   };
 
-  // groups como Record<number, Task[]>
   const groups: Record<number, Task[]> = {
     1: localTasks
       .filter((t) => t.listId === 1)
@@ -74,56 +73,42 @@ export function TaskBoard() {
     }
 
     const activeId = String(active.id);
-    const sourceListId = Number(active.data?.current?.listId);
+    const overIdStr = String(over.id);
 
-    let destListId: number = 0; // fallback seguro
-    const overList = over.data?.current?.listId;
-    if (typeof overList === "number") {
-      destListId = overList;
-    } else {
-      const overIdStr = String(over.id);
+    let destListId = Number(over.data?.current?.listId);
+    if (!destListId) {
       const match = overIdStr.match(/^column-(\d+)$/);
-      if (match) {
-        destListId = Number(match[1]);
-      } else {
+      if (match) destListId = Number(match[1]);
+      else {
         const found = tasks.find((t) => t.id === overIdStr);
         if (found) destListId = found.listId;
       }
     }
 
-    if (!destListId) {
-      setActiveTask(null);
-      return;
-    }
+    if (!destListId) return;
 
     const destArr = groups[destListId] ?? [];
-    const overIndex = destArr.findIndex((t) => t.id === String(over.id));
+    const overIndex = destArr.findIndex((t) => t.id === overIdStr);
     const destIndex = overIndex === -1 ? destArr.length : overIndex;
 
-    setLocalTasks((prev: Task[]): Task[] => {
-      return prev.map((t) =>
+    setLocalTasks((prev) =>
+      prev.map((t) =>
         t.id === activeId
-          ? {
-              ...t,
-              listId: destListId, // ✅ actualizado
-              position: destIndex + 1,
-            }
+          ? { ...t, listId: destListId, position: destIndex + 1 }
           : t
-      );
-    });
+      )
+    );
 
-    // 🔥 actualización al backend
     moveMutation.mutate({
       id: activeId,
       listId: destListId,
       position: destIndex + 1,
     });
 
-    // reset del overlay
     setActiveTask(null);
   };
 
-  if (isLoading) return <div>Loading tasks...</div>;
+  if (isLoading) return <div className={styles.loading}>Loading tasks...</div>;
 
   return (
     <>
@@ -131,51 +116,62 @@ export function TaskBoard() {
         sensors={sensors}
         collisionDetection={closestCenter}
         onDragStart={(event) => {
-          const activeId = String(event.active.id);
-          const found = localTasks.find((t) => t.id === activeId);
+          const id = String(event.active.id);
+          const found = localTasks.find((t) => t.id === id);
           if (found) setActiveTask(found);
         }}
         onDragEnd={onDragEnd}
         onDragCancel={() => setActiveTask(null)}
       >
-        <div className={styles.header}>
-          <h1 className={styles.title}>My tasks</h1>
-          <Button onClick={() => setIsTaskModalOpen(true)}>Nueva Tarea</Button>
-        </div>
-
         <div className={styles.columns}>
           <Column
             listId={1}
-            title="Pendientes"
+            title="To Do"
             tasks={groups[1]}
             onOpen={handleOpenTask}
+            onCreate={(listId) => {
+              setInitialListId(listId);
+              setIsTaskModalOpen(true);
+            }}
           />
           <Column
             listId={2}
-            title="En Progreso"
+            title="In Progress"
             tasks={groups[2]}
             onOpen={handleOpenTask}
+            onCreate={(listId) => {
+              setInitialListId(listId);
+              setIsTaskModalOpen(true);
+            }}
           />
           <Column
             listId={3}
-            title="Completadas"
+            title="Done"
             tasks={groups[3]}
             onOpen={handleOpenTask}
+            onCreate={(listId) => {
+              setInitialListId(listId);
+              setIsTaskModalOpen(true);
+            }}
           />
         </div>
 
-        {/* 🔥 DragOverlay para que el item siga al cursor */}
         <DragOverlay style={{ zIndex: 9999, pointerEvents: "none" }}>
           {activeTask ? <Card task={activeTask} /> : null}
         </DragOverlay>
+
         <Modal
           isOpen={isTaskModalOpen}
           onClose={() => setIsTaskModalOpen(false)}
-          title="Nueva Tarea"
+          title="New Task"
         >
-          <TaskForm onClose={() => setIsTaskModalOpen(false)} />
+          <TaskForm
+            onClose={() => setIsTaskModalOpen(false)}
+            initialListId={initialListId ?? undefined}
+          />
         </Modal>
       </DndContext>
+
       <TaskDetailsModal
         task={selectedTask}
         isOpen={isDetailsOpen}

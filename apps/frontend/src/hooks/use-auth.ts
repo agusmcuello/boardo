@@ -20,7 +20,7 @@ export function useAuth() {
       if (guestMode === "1") {
         setUser({
           id: 0,
-          name: "Invitado",
+          name: "Guest",
           email: "guest@boardo",
           guest: true,
         });
@@ -71,7 +71,7 @@ export function useAuth() {
   const loginGuest = () => {
     const guestUser = {
       id: 0,
-      name: "Invitado",
+      name: "Guest",
       email: "guest@boardo",
       guest: true,
     };

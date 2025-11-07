@@ -4,22 +4,45 @@
   position: sticky;
   top: 0;
   z-index: 100;
+  line-height: 1;
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 20px;
   height: 64px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+.logo {
+  color: var(--brand-700);
+  position: relative;
+  display: none;
+}
+
+.logo .text {
+  position: absolute;
+  top: 20;
+}
+.welcome {
+  color: var(--brand-700);
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+.welcome span {
+  font-weight: 400;
 }
 
 .userSection {
   display: flex;
   align-items: center;
   gap: 16px;
+}
+.guest {
+  color: var(--brand-700);
+  display: block;
 }
 
 .userEmail {
@@ -32,7 +55,10 @@
     padding: 0 16px;
   }
 
-  .userEmail {
+  .logo {
+    display: block;
+  }
+  .welcome {
     display: none;
   }
 }

@@ -15,11 +15,13 @@ export default function Column({
   title,
   tasks,
   onOpen,
+  onCreate,
 }: {
   listId: number;
   title: string;
   tasks: Task[];
   onOpen: (task: Task) => void; // 👈 lo agregamos acá
+  onCreate?: (listId: number) => void;
 }) {
   const { setNodeRef } = useDroppable({
     id: `column-${listId}`,
@@ -40,6 +42,12 @@ export default function Column({
           <TaskCardSortable key={task.id} task={task} onOpen={onOpen} />
         ))}
       </SortableContext>
+      {/** ✅ botón para crear tarea en esta columna */}
+      {onCreate && (
+        <button className={styles.addTaskBtn} onClick={() => onCreate(listId)}>
+          + Add task
+        </button>
+      )}
     </div>
   );
 }

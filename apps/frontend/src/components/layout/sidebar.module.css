@@ -1,0 +1,141 @@
+/* sidebar.module.css */
+.sidebar {
+  width: 220px;
+  min-width: 200px;
+  max-width: 260px;
+  height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: linear-gradient(180deg, rgba(66, 186, 197, 0.04), transparent);
+  border-right: 1px solid rgba(15, 23, 42, 0.04);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 6px;
+  margin-bottom: 8px;
+  margin-left: 10px;
+}
+
+.title {
+  color: var(--brand-700);
+  position: relative;
+}
+
+.title .text {
+  position: absolute;
+  top: 22;
+}
+
+.brandLink {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--brand-900);
+  font-weight: 700;
+}
+
+.brandText {
+  font-size: 1.05rem;
+  letter-spacing: -0.02em;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1 1 auto;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--brand-700);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.navItem:hover {
+  background: rgba(66, 186, 197, 0.08);
+  color: var(--brand-900);
+}
+
+.icon {
+  width: 28px;
+  text-align: center;
+  font-size: 16px;
+  opacity: 0.9;
+}
+
+.label {
+  flex: 1 1 auto;
+  text-align: left;
+}
+
+.bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
+  border-top: 1px dashed rgba(15, 23, 42, 0.04);
+  padding-top: 12px;
+}
+
+.user {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: linear-gradient(180deg, var(--brand-500), var(--brand-700));
+  color: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.userInfo {
+  font-size: 13px;
+  color: var(--brand-900);
+}
+
+.userName {
+  font-weight: 600;
+}
+
+.userEmail {
+  font-weight: 400;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.linkBtn {
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: transparent;
+  border: 1px solid rgba(15, 23, 42, 0.04);
+  color: var(--brand-700);
+  cursor: pointer;
+}
