@@ -1,0 +1,20 @@
+/* components/ui/back-button.module.css */
+.btn {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  text-decoration: none;
+  color: var(--brand-700);
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: background 0.15s ease, transform 0.08s ease;
+  font-weight: 600;
+}
+.btn:hover {
+  background: rgba(66, 186, 197, 0.08);
+  transform: translateY(-1px);
+}
+.label {
+  font-size: 14px;
+  line-height: 1;
+}

@@ -57,12 +57,12 @@
 }
 
 /* submit button */
-.button {
+.form .button {
   width: 100%;
   padding: 12px 0;
   border: none;
   border-radius: 9999px;
-  background: var(--brand-400);
+  background: var(--brand-500);
   color: white;
   font-weight: 600;
   font-size: 1rem;
@@ -70,16 +70,16 @@
   cursor: pointer;
 }
 
-.button:hover:not(:disabled) {
-  background: var(--brand-500);
+.form .button:hover:not(:disabled) {
+  background: var(--brand-600);
   transform: translateY(-1px);
 }
 
-.button:active {
+.form .button:active {
   transform: translateY(0);
 }
 
-.button:disabled {
+.form .button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }

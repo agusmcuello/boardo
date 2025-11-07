@@ -21,7 +21,7 @@ export function LoginForm() {
       setIsLoading(true);
       await login(email, password);
     } catch (err: any) {
-      setError(err.message || "Email o contraseña incorrectos");
+      setError(err.message || "Incorrect email or password");
     } finally {
       setIsLoading(false);
     }
@@ -36,10 +36,10 @@ export function LoginForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          placeholder="tu@email.com"
+          placeholder="your@email.com"
         />
         <Input
-          label="Contraseña"
+          label="Password"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -56,7 +56,7 @@ export function LoginForm() {
         disabled={isLoading}
         className={styles.button}
       >
-        {isLoading ? "Iniciando sesión..." : "Iniciar Sesión"}
+        {isLoading ? "Logging in" : "Login"}
       </Button>
     </form>
   );

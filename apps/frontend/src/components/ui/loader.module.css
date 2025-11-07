@@ -1,0 +1,20 @@
+/* components/ui/loader.module.css */
+.spinner {
+  border-radius: 50%;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.08);
+  border-top-color: var(--brand-500);
+  animation: spin 0.9s linear infinite;
+  box-sizing: border-box;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+/* Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation: none;
+  }
+}
