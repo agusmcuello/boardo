@@ -1,6 +1,6 @@
 .taskCard {
   position: relative;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--brand-900);
   border-radius: 6px;
   padding: 16px;
   cursor: pointer;
@@ -8,8 +8,8 @@
 }
 
 .taskCard:hover {
-  border-color: #2563eb;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border-color: var(--brand-300);
+  box-shadow: 0 4px 16px -1px rgba(0, 0, 0, 0.1);
 }
 
 .taskTitle {

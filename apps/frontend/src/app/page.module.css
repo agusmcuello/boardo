@@ -74,13 +74,35 @@
   color: var(--brand-300);
   border-radius: 9999px;
   padding: 12px 40px;
-  border: 1px solid rgba(15, 23, 42, 0.06);
+  border: 1px solid transparent;
+  text-decoration: none;
   transition: all 0.2s ease-in-out;
   cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.ctaSecondary::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 12px 40px;
+  background-color: var(--brand-200);
+  width: 10px;
+  height: 200px;
+  transform: translateX(-150%);
+  transition: transform 0.3s ease;
+  opacity: 0;
 }
 
 .ctaSecondary:hover {
   border-color: var(--brand-300);
+}
+
+.ctaSecondary:hover::before {
+  opacity: 1;
+  transform: translateX(150%);
 }
 
 .footer {
@@ -95,6 +117,10 @@
   border-bottom: 1px solid rgba(0, 67, 224, 0.06);
   text-decoration: none;
   padding: 12px 20px;
+}
+
+.footer .ctaSecondary::before {
+  display: none;
 }
 
 .footer .ctaSecondary:hover {

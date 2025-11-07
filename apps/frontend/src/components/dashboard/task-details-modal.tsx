@@ -46,34 +46,39 @@ export function TaskDetailsModal({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Detalles de la tarea">
+    <Modal isOpen={isOpen} onClose={onClose} title="Task details">
       <div>
         <h3>{task.title}</h3>
         {task.description && <p>{task.description}</p>}
         <p>
-          <strong>Prioridad:</strong> {task.priority}
+          <strong>Priority:</strong> {task.priority}
         </p>
       </div>
 
       <div style={{ marginTop: "1rem", display: "flex", gap: "0.5rem" }}>
         <Button variant="outline" onClick={onClose}>
-          Cerrar
+          Close
         </Button>
         {!confirmDelete ? (
           <Button variant="destructive" onClick={handleDeleteClick}>
-            Eliminar
+            Delete
           </Button>
         ) : (
-          <div style={{ display: "flex", gap: "0.5rem" }}>
-            <Button variant="outline" onClick={() => setConfirmDelete(false)}>
-              Cancelar
-            </Button>
+          <div
+            style={{
+              display: "flex",
+              gap: "1rem",
+              justifyContent: "space-around",
+              alignItems: "center",
+            }}
+          >
+            <h4 style={{ color: "#1f1d2a", margin: "0" }}>Sure?</h4>
             <Button
               variant="destructive"
               onClick={handleConfirmDelete}
               disabled={isDeleting}
             >
-              {isDeleting ? "Eliminando..." : "Confirmar eliminación"}
+              {isDeleting ? "Removing" : "Delete"}
             </Button>
           </div>
         )}

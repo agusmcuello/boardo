@@ -49,7 +49,7 @@ export default function Home() {
         </p>
 
         <div className={styles.ctas}>
-          <Link className={styles.ctaPrimary} href="/auth/login">
+          <Link className={styles.ctaSecondary} href="/auth/login">
             Login
           </Link>
           <Link className={styles.ctaSecondary} href="/auth/register">

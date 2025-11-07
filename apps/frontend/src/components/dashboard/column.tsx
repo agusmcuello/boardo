@@ -30,7 +30,7 @@ export default function Column({
 
   return (
     <div ref={setNodeRef} className={styles.column}>
-      <h3>
+      <h3 className={styles.columnTitle}>
         {title} ({tasks.length})
       </h3>
 

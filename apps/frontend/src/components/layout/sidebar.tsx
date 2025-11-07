@@ -20,24 +20,16 @@ export default function Sidebar({}: {}) {
 
       <nav className={styles.nav}>
         <Link href="/dashboard" className={styles.navItem}>
-          <span className={styles.icon}>🏠</span>
           <span className={styles.label}>Dashboard</span>
         </Link>
 
-        <Link href="/boards" className={styles.navItem}>
-          <span className={styles.icon}>📋</span>
+        <Link href="/dashboard" className={styles.navItem}>
           <span className={styles.label}>Boards</span>
         </Link>
 
-        <Link href="/tasks" className={styles.navItem}>
-          <span className={styles.icon}>✅</span>
+        <Link href="/dashboard" className={styles.navItem}>
           <span className={styles.label}>My tasks</span>
         </Link>
-
-        <button type="button" className={styles.navItem}>
-          <span className={styles.icon}>🗂️</span>
-          <span className={styles.label}>New board</span>
-        </button>
       </nav>
 
       <div className={styles.bottom}>

@@ -12,7 +12,7 @@
 }
 
 .button:focus {
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.5);
+  box-shadow: 0 0 0 2px var(--brand-300);
 }
 
 .button:disabled {
@@ -22,26 +22,28 @@
 
 /* Variants */
 .default {
-  background-color: #2563eb;
+  background-color: var(--brand-300);
   color: white;
 }
+
 .login {
   background-color: #b04d87;
   color: white;
 }
 
 .default:hover:not(:disabled) {
-  background-color: #1d4ed8;
+  background-color: var(--brand-300);
 }
 
 .outline {
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--brand-300);
   background-color: white;
-  color: #374151;
+  color: var(--brand-900);
+  transition: all 0.2s ease-in-out;
 }
 
-.outline:hover:not(:disabled) {
-  background-color: #f9fafb;
+.outline:hover {
+  background-color: var(--brand-300);
 }
 
 .ghost {

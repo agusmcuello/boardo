@@ -1,68 +1,142 @@
+/* === OVERLAY CON FADE === */
 .overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  inset: 0;
+  background: var(--brand-100);
+  backdrop-filter: blur(4px);
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  padding: 32px;
   z-index: 1000;
-  padding: 20px;
+
+  animation: fadeIn 0.25s ease forwards;
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* === MODAL CARD === */
 .modal {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  max-width: 500px;
   width: 100%;
+  max-width: 520px;
   max-height: 90vh;
-  overflow: hidden;
+
+  background: linear-gradient(180deg, var(--brand-300), var(--brand-500));
+  backdrop-filter: blur(10px);
+
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(31, 29, 42, 0.25);
+
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+
+  transform: scale(0.96);
+  opacity: 0;
+  animation: modalIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+@keyframes modalIn {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* === HEADER === */
 .header {
-  padding: 20px 24px;
-  border-bottom: 1px solid #e5e7eb;
+  padding: 20px 28px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-bottom: 1px solid rgba(31, 29, 42, 0.1);
 }
 
 .title {
   margin: 0;
-  font-size: 18px;
-  font-weight: 600;
-  color: #111827;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--brand-900);
 }
 
+/* === CLOSE BUTTON (ONE-WAY SWEEP) === */
 .closeButton {
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  padding: 4px;
-  color: #6b7280;
-  line-height: 1;
-  width: 32px;
-  height: 32px;
+  position: relative;
+  width: 36px;
+  height: 36px;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
-  transition: all 0.2s ease;
+
+  border: none;
+  background: transparent;
+  font-size: 22px;
+  color: var(--brand-700);
+  cursor: pointer;
+
+  border-radius: 8px;
+  overflow: hidden;
+
+  transition: color 0.2s ease;
 }
 
 .closeButton:hover {
-  background-color: #f3f4f6;
-  color: #374151;
+  color: var(--brand-900);
 }
 
+/* Sweep effect */
+.closeButton::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.35),
+    transparent
+  );
+
+  transform: translateX(-120%);
+  opacity: 0;
+
+  transition: transform 0.45s ease, opacity 0.2s ease;
+}
+
+.closeButton:hover::before {
+  transform: translateX(120%);
+  opacity: 1;
+}
+
+/* === CONTENT (SCROLLABLE) === */
 .content {
-  padding: 24px;
+  padding: 24px 28px;
   overflow-y: auto;
   flex: 1;
+}
+
+/* Scrollbar refinado */
+.content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.content::-webkit-scrollbar-thumb {
+  background: rgba(31, 29, 42, 0.15);
+  border-radius: 4px;
+}
+
+.content::-webkit-scrollbar-thumb:hover {
+  background: rgba(31, 29, 42, 0.25);
 }

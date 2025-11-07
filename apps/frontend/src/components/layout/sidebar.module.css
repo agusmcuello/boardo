@@ -24,6 +24,7 @@
 
 .title {
   color: var(--brand-700);
+  font-size: 1.3rem;
   position: relative;
 }
 
@@ -68,7 +69,7 @@
   transition: background 0.12s ease, color 0.12s ease;
 }
 .navItem:hover {
-  background: rgba(66, 186, 197, 0.08);
+  background: rgba(66, 186, 197, 0.2);
   color: var(--brand-900);
 }
 
@@ -138,4 +139,11 @@
   border: 1px solid rgba(15, 23, 42, 0.04);
   color: var(--brand-700);
   cursor: pointer;
+}
+
+/* responsive: collapse sidebar under 900px */
+@media (max-width: 900px) {
+  .sidebar {
+    display: none;
+  }
 }
