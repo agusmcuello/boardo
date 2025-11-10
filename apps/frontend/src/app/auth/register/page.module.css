@@ -15,11 +15,7 @@
 .card {
   width: 100%;
   max-width: 520px;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.9),
-    rgba(255, 255, 255, 0.6)
-  );
+  background: linear-gradient(180deg, var(--brand-300), #d1d1d1);
   backdrop-filter: blur(6px);
   border-radius: 14px;
   padding: 36px;
