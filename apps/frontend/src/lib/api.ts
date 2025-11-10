@@ -10,7 +10,7 @@ export class ApiError extends Error {
 }
 
 class ApiClient {
-  private baseURL = "http://localhost:4000/api";
+  private baseURL = process.env.NEXT_PUBLIC_API_URL!;
   private token: string | null = null;
 
   setToken(token?: string | null) {
