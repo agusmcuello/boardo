@@ -16,8 +16,19 @@ import listsRoutes from "./routes/lists";
 import tasksRoutes from "./routes/tasks";
 
 const app = express();
-const allowedOrigins = ["http://localhost:3000"];
-app.use(cors({ origin: allowedOrigins }));
+app.use(
+  cors({
+    origin: [
+      "https://boardo-frontend.vercel.app/", // front en Vercel ✅
+      "http://localhost:3000", //  dev local ✅
+    ],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+app.options("*", cors());
+
 app.use(bodyParser.json());
 
 const PORT = process.env.PORT || 4000;
