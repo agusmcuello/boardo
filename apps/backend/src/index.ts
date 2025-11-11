@@ -18,15 +18,15 @@ import tasksRoutes from "./routes/tasks";
 const app = express();
 app.use(
   cors({
-    origin: [
-      "https://boardo-frontend.vercel.app/", // front en Vercel ✅
-      "http://localhost:3000", //  dev local ✅
-    ],
+    origin: ["https://boardo-frontend.vercel.app", "http://localhost:3000"],
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
+// ✅ importante: permitir preflight correctamente sin expresiones regulares
+app.options("*", cors());
 
 app.use(bodyParser.json());
 
