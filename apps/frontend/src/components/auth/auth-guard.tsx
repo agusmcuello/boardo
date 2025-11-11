@@ -3,6 +3,7 @@
 import { ReactNode, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
+import styles from "./auth-guard.module.css";
 
 interface AuthGuardProps {
   children: ReactNode;
@@ -20,7 +21,11 @@ export function AuthGuard({ children }: AuthGuardProps) {
 
   if (!isReady) {
     return (
-      <div style={{ textAlign: "center", marginTop: "20px" }}>Cargando...</div>
+      <div className={styles.loader}>
+        <svg className={styles.ring} viewBox="0 0 50 50">
+          <circle className={styles.path} cx="25" cy="25" r="18" />
+        </svg>
+      </div>
     );
   }
 
