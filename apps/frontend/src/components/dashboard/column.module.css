@@ -2,7 +2,10 @@
   background: linear-gradient(180deg, var(--brand-300), var(--brand-700));
   border-radius: 8px;
   padding: 16px;
-  min-height: 400px;
+  min-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .columnTitle {
@@ -12,6 +15,8 @@
   margin: 0 0 16px 0;
   padding-bottom: 8px;
   border-bottom: 2px solid #e5e7eb;
+  font-family: var(--font-ubuntu);
+  font-weight: 400;
 }
 
 .addTaskBtn {
@@ -20,6 +25,7 @@
   padding: 10px;
   font-size: 0.9rem;
   background: rgba(255, 255, 255, 0.35);
+  font-family: var(--font-maven);
   border: 1px dashed var(--brand-300);
   border-radius: 10px;
   color: var(--brand-700);

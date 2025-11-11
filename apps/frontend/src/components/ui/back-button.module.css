@@ -8,6 +8,7 @@
   padding: 6px 10px;
   border-radius: 8px;
   transition: background 0.15s ease, transform 0.08s ease;
+  font-family: var(--font-maven);
   font-weight: 600;
 }
 .btn:hover {

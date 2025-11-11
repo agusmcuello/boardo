@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Task } from "@/types/task";
 import {
   DndContext,
@@ -13,25 +13,37 @@ import {
 } from "@dnd-kit/core";
 import { useUserTasks, useMoveTask } from "@/hooks/use-tasks";
 import { useAuth } from "@/hooks/use-auth";
+import { useQueryClient } from "@tanstack/react-query";
+
 import Column from "./column";
 import Card from "../ui/card";
 import { TaskForm } from "./task-form";
 import { Modal } from "../ui/modal";
-import { Button } from "../ui/button";
 import { TaskDetailsModal } from "./task-details-modal";
 import styles from "./task-board.module.css";
 
 export function TaskBoard() {
+  const qc = useQueryClient();
   const { user } = useAuth();
   const { data: tasks = [], isLoading } = useUserTasks(user?.id);
   const moveMutation = useMoveTask(user?.id);
 
+  // ✅ local snapshot only during drag
+  const [localTasks, setLocalTasks] = useState<Task[] | null>(null);
+  const [activeTask, setActiveTask] = useState<Task | null>(null);
+
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
-  const [localTasks, setLocalTasks] = useState<Task[]>([]);
-  const [activeTask, setActiveTask] = useState<Task | null>(null);
   const [initialListId, setInitialListId] = useState<number | null>(null);
+
+  // ✅ fuente de verdad para render
+  const effectiveTasks = localTasks ?? tasks;
+
+  // ✅ cuando cambia el user, limpiar snapshot
+  useEffect(() => {
+    setLocalTasks(null);
+  }, [user?.id]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -39,9 +51,24 @@ export function TaskBoard() {
     })
   );
 
-  useEffect(() => {
-    setLocalTasks(tasks);
-  }, [tasks]);
+  // ✅ columnas memoizadas (evita recalcular y recrear arrays)
+  const groups = useMemo(() => {
+    const source = effectiveTasks;
+    return {
+      1: source
+        .filter((t) => t.listId === 1)
+        .slice()
+        .sort((a, b) => a.position - b.position),
+      2: source
+        .filter((t) => t.listId === 2)
+        .slice()
+        .sort((a, b) => a.position - b.position),
+      3: source
+        .filter((t) => t.listId === 3)
+        .slice()
+        .sort((a, b) => a.position - b.position),
+    };
+  }, [effectiveTasks]);
 
   const handleOpenTask = (task: Task) => {
     setSelectedTask(task);
@@ -53,22 +80,25 @@ export function TaskBoard() {
     setIsDetailsOpen(false);
   };
 
-  const groups: Record<number, Task[]> = {
-    1: localTasks
-      .filter((t) => t.listId === 1)
-      .sort((a, b) => a.position - b.position),
-    2: localTasks
-      .filter((t) => t.listId === 2)
-      .sort((a, b) => a.position - b.position),
-    3: localTasks
-      .filter((t) => t.listId === 3)
-      .sort((a, b) => a.position - b.position),
+  // ✅ snapshot cuando comienza el drag
+  const handleDragStart = (event: any) => {
+    const id = String(event.active.id);
+
+    // Creamos snapshot de tasks
+    setLocalTasks(tasks);
+
+    // tarea activa
+    const found = (localTasks ?? tasks).find((t) => t.id === id);
+    if (found) setActiveTask(found);
   };
 
+  // ✅ fin del drag
   const onDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
+
     if (!over) {
       setActiveTask(null);
+      setLocalTasks(null);
       return;
     }
 
@@ -76,52 +106,74 @@ export function TaskBoard() {
     const overIdStr = String(over.id);
 
     let destListId = Number(over.data?.current?.listId);
+
     if (!destListId) {
       const match = overIdStr.match(/^column-(\d+)$/);
       if (match) destListId = Number(match[1]);
       else {
-        const found = tasks.find((t) => t.id === overIdStr);
+        const found = effectiveTasks.find((t) => t.id === overIdStr);
         if (found) destListId = found.listId;
       }
     }
 
-    if (!destListId) return;
+    if (!destListId) {
+      setActiveTask(null);
+      setLocalTasks(null);
+      return;
+    }
 
-    const destArr = groups[destListId] ?? [];
-    const overIndex = destArr.findIndex((t) => t.id === overIdStr);
+    const source = localTasks ?? tasks;
+    if (destListId !== 1 && destListId !== 2 && destListId !== 3) {
+      setLocalTasks(null);
+      setActiveTask(null);
+      return;
+    }
+
+    const destArr = groups[destListId];
+    const overIndex = destArr.findIndex((t: any) => t.id === overIdStr);
     const destIndex = overIndex === -1 ? destArr.length : overIndex;
 
+    // ✅ optimistic UI local
     setLocalTasks((prev) =>
-      prev.map((t) =>
+      (prev ?? tasks).map((t) =>
         t.id === activeId
           ? { ...t, listId: destListId, position: destIndex + 1 }
           : t
       )
     );
 
-    moveMutation.mutate({
-      id: activeId,
-      listId: destListId,
-      position: destIndex + 1,
-    });
+    // ✅ mutate backend
+    moveMutation.mutate(
+      { id: activeId, listId: destListId, position: destIndex + 1 },
+      {
+        onSettled: () => {
+          // recargar tareas desde cache o API
+          qc.invalidateQueries({ queryKey: ["userTasks", user?.id] });
 
-    setActiveTask(null);
+          // volver a modo normal
+          setLocalTasks(null);
+          setActiveTask(null);
+        },
+      }
+    );
   };
 
-  if (isLoading) return <div className={styles.loading}>Loading tasks...</div>;
+  // ✅ Si no hay tareas en cache y está cargando → mostrar loader
+  if (isLoading && tasks.length === 0) {
+    return <div className={styles.loading}>Loading tasks...</div>;
+  }
 
   return (
     <>
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
-        onDragStart={(event) => {
-          const id = String(event.active.id);
-          const found = localTasks.find((t) => t.id === id);
-          if (found) setActiveTask(found);
-        }}
+        onDragStart={handleDragStart}
         onDragEnd={onDragEnd}
-        onDragCancel={() => setActiveTask(null)}
+        onDragCancel={() => {
+          setLocalTasks(null);
+          setActiveTask(null);
+        }}
       >
         <div className={styles.columns}>
           <Column

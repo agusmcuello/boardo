@@ -25,7 +25,9 @@ export default function LoginPage() {
           </p>
         </div>
 
-        <LoginForm />
+        <div className={styles.formWrapper}>
+          <LoginForm />
+        </div>
 
         <p className={styles.footerText}>
           Don’t have an account?{" "}

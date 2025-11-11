@@ -27,7 +27,7 @@ export function TaskForm({
     e.preventDefault();
     setError(null);
     if (!title.trim()) {
-      setError("El título es obligatorio");
+      setError("Title is required");
       return;
     }
     setIsLoading(true);
@@ -40,7 +40,7 @@ export function TaskForm({
       });
       onClose();
     } catch (err: any) {
-      setError(err?.message || "Error al crear la tarea");
+      setError(err?.message || "Error creating task");
     } finally {
       setIsLoading(false);
     }
@@ -49,30 +49,31 @@ export function TaskForm({
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
       <Input
-        label="Título"
+        label="Title"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         required
-        placeholder="Título de la tarea"
+        placeholder="Task title"
       />
-      <label>
-        Descripción
+      <label className={styles.label}>
+        Description
         <textarea
           className={styles.textarea}
+          placeholder="Task description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
       </label>
       <label className={styles.label}>
-        Prioridad
+        Priority
         <select
           className={styles.select}
           value={priority}
           onChange={(e) => setPriority(e.target.value as any)}
         >
-          <option value="LOW">Baja</option>
-          <option value="MEDIUM">Media</option>
-          <option value="HIGH">Alta</option>
+          <option value="LOW">Low</option>
+          <option value="MEDIUM">Medium</option>
+          <option value="HIGH">High</option>
         </select>
       </label>
       <label className={styles.label}>
@@ -82,9 +83,9 @@ export function TaskForm({
           value={listId}
           onChange={(e) => setListId(Number(e.target.value))}
         >
-          <option value={1}>Pendientes</option>
-          <option value={2}>En Progreso</option>
-          <option value={3}>Completadas</option>
+          <option value={1}>To do</option>
+          <option value={2}>In progress</option>
+          <option value={3}>Done</option>
         </select>
       </label>
 
@@ -92,10 +93,10 @@ export function TaskForm({
 
       <div className={styles.actions}>
         <Button type="button" variant="outline" onClick={onClose}>
-          Cancelar
+          Cancel
         </Button>
         <Button type="submit" disabled={isLoading}>
-          {isLoading ? "Creando..." : "Crear tarea"}
+          {isLoading ? "Creating..." : "Create"}
         </Button>
       </div>
     </form>

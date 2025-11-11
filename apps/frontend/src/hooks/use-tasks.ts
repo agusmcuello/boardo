@@ -53,6 +53,9 @@ function readGuestTasks(): Task[] {
 // --------------------------
 // Traer las task del user
 // --------------------------
+// use-tasks.ts — extracto con cambios importantes
+
+// useUserTasks
 export function useUserTasks(userId?: number) {
   return useQuery<Task[]>({
     queryKey: ["userTasks", userId],
@@ -65,6 +68,97 @@ export function useUserTasks(userId?: number) {
       return (rows || []).map(normalizeTask);
     },
     enabled: userId !== undefined && userId !== null,
+
+    // ✅ Importante: no asumir que data inicial es []
+    initialData: () => {
+      // si existe cache previa, úsala
+      return undefined;
+    },
+  });
+}
+
+// useMoveTask (IMPORTANTE: usa la queryKey con userId)
+export function useMoveTask(userId?: number) {
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (p: { id: string; listId: number; position: number }) => {
+      if (!userId) {
+        const arr = readGuestTasksRaw();
+        const idx = arr.findIndex((t: any) => String(t.id) === String(p.id));
+        if (idx === -1) return;
+        arr[idx].listId = p.listId;
+        arr[idx].position = p.position;
+        arr[idx].updatedAt = new Date().toISOString();
+        writeGuestTasksRaw(arr);
+        return;
+      }
+      return api.put(`tasks/${p.id}`, p);
+    },
+
+    onMutate: async (payload) => {
+      await qc.cancelQueries({ queryKey: ["userTasks", userId] });
+
+      const prev = qc.getQueryData<Task[]>(["userTasks", userId]);
+
+      if (prev) {
+        const next = prev.map((t) =>
+          t.id === payload.id
+            ? { ...t, listId: payload.listId, position: payload.position }
+            : t
+        );
+        qc.setQueryData(["userTasks", userId], next);
+      }
+
+      return { prev };
+    },
+
+    onError: (_err, _vars, ctx) => {
+      if (ctx?.prev) qc.setQueryData(["userTasks", userId], ctx.prev);
+    },
+
+    onSettled: () => {
+      qc.invalidateQueries({ queryKey: ["userTasks", userId] });
+    },
+  });
+}
+
+// useDeleteTask (idem, usa userId en la key)
+export function useDeleteTask(userId?: number) {
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      if (userId === 0) {
+        const arr = readGuestTasksRaw();
+        const next = arr.filter((t: any) => String(t.id) !== String(id));
+        writeGuestTasksRaw(next);
+        return;
+      }
+      return api.del(`tasks/${id}`);
+    },
+
+    onMutate: async (id: string) => {
+      await qc.cancelQueries({ queryKey: ["userTasks", userId] });
+
+      const previous = qc.getQueryData<Task[]>(["userTasks", userId]);
+
+      if (previous) {
+        const updated = previous.filter((t) => String(t.id) !== String(id));
+        qc.setQueryData(["userTasks", userId], updated);
+      }
+
+      return { previous };
+    },
+
+    onError: (_err, _id, context) => {
+      if (context?.previous)
+        qc.setQueryData(["userTasks", userId], context.previous);
+    },
+
+    onSettled: () => {
+      qc.invalidateQueries({ queryKey: ["userTasks", userId] });
+    },
   });
 }
 
@@ -112,112 +206,6 @@ export function useCreateTask(userId?: number) {
 
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["userTasks", userId] });
-    },
-  });
-}
-
-// --------------------------
-// 3) Mover tasks
-// --------------------------
-export function useMoveTask(userId?: number) {
-  const qc = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (p: { id: string; listId: number; position: number }) => {
-      if (!userId) {
-        // ✅ guest update
-        const arr = readGuestTasksRaw();
-        const idx = arr.findIndex((t: any) => String(t.id) === String(p.id));
-        if (idx === -1) return;
-
-        arr[idx].listId = p.listId;
-        arr[idx].position = p.position;
-        arr[idx].updatedAt = new Date().toISOString();
-
-        writeGuestTasksRaw(arr);
-        return;
-      }
-
-      return api.put(`tasks/${p.id}`, p);
-    },
-
-    // Optimistic update (funciona igual para guest y real)
-    onMutate: async (payload) => {
-      await qc.cancelQueries({ queryKey: ["userTasks"] });
-
-      const prev = qc.getQueryData<Task[]>(["userTasks"]);
-
-      if (prev) {
-        const next = prev.map((t) =>
-          t.id === payload.id
-            ? { ...t, listId: payload.listId, position: payload.position }
-            : t
-        );
-
-        qc.setQueryData(["userTasks"], next);
-      }
-
-      return { prev };
-    },
-
-    onError: (_err, _vars, ctx) => {
-      if (ctx?.prev) {
-        qc.setQueryData(["userTasks"], ctx.prev);
-      }
-    },
-
-    onSettled: () => {
-      qc.invalidateQueries({ queryKey: ["userTasks"] });
-    },
-  });
-}
-
-// --------------------------
-// 4) Borrar Tasks
-// --------------------------
-export function useDeleteTask(userId?: number) {
-  const qc = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (id: string) => {
-      if (userId === 0) {
-        // ✅ guest delete
-        const arr = readGuestTasksRaw();
-        const next = arr.filter((t: any) => String(t.id) !== String(id));
-        writeGuestTasksRaw(next);
-        return;
-      }
-
-      return api.del(`tasks/${id}`);
-    },
-
-    onMutate: async (id: string) => {
-      await qc.cancelQueries({ queryKey: ["userTasks"] });
-
-      const previous = qc.getQueriesData({ queryKey: ["userTasks"] });
-
-      qc.getQueriesData({ queryKey: ["userTasks"] }).forEach(
-        ([qk, data]: any) => {
-          if (Array.isArray(data)) {
-            const updated = data.filter((t) => String(t.id) !== String(id));
-            qc.setQueryData(qk as any, updated);
-          }
-        }
-      );
-
-      return { previous };
-    },
-
-    onError: (_err, _id, context) => {
-      if (context?.previous) {
-        context.previous.forEach(([qk, data]: any) => {
-          qc.setQueryData(qk as any, data);
-        });
-      }
-    },
-
-    onSettled: (_d, _e, _v, _c) => {
-      qc.invalidateQueries({ queryKey: ["userTasks"] });
     },
   });
 }

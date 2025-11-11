@@ -20,10 +20,11 @@ export default function RegisterPage() {
             <span>oardo</span>
           </h1>
           <h2 className={styles.title}>Create an account</h2>
-          <p className={styles.subtitle}>Join Boardo to manage your tasks</p>
         </div>
 
-        <RegisterForm />
+        <div className={styles.formWrapper}>
+          <RegisterForm />
+        </div>
 
         <p className={styles.footerText}>
           Already have an account?{" "}

@@ -36,4 +36,6 @@
   margin: 0;
   font-size: 14px;
   color: #111827;
+  font-family: var(--font-ubuntu);
+  font-weight: 600;
 }

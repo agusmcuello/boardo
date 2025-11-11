@@ -25,14 +25,19 @@
 .logo .text {
   position: absolute;
   top: 20;
+  font-family: var(--font-ubuntu);
+  font-weight: 600;
 }
 .welcome {
   color: var(--brand-700);
+  font-family: var(--font-ubuntu);
+  font-weight: 300;
   font-size: 1.5rem;
   font-weight: 600;
 }
 .welcome span {
   font-weight: 400;
+  font-family: var(--font-quando);
 }
 
 .userSection {
@@ -43,11 +48,13 @@
 .guest {
   color: var(--brand-700);
   display: block;
+  font-family: var(--font-maven);
 }
 
 .userEmail {
   font-size: 14px;
   color: #6b7280;
+  font-family: var(--font-maven);
 }
 
 @media (max-width: 768px) {

@@ -21,7 +21,7 @@
 
 .taskDescription {
   font-size: 14px;
-  color: #6b7280;
+  color: var(--brand-900);
   margin: 0 0 12px 0;
   line-height: 1.4;
 }

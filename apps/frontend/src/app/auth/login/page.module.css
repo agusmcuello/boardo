@@ -41,7 +41,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
+  font-family: var(--font-ubuntu);
+  font-weight: 600;
   font-size: 1.4rem;
   color: var(--brand-900);
 }
@@ -55,10 +56,12 @@
   margin: 8px 0 0 0;
   font-size: 1.2rem;
   color: var(--brand-700);
+  font-family: var(--font-quando);
 }
 
 .subtitle {
   color: var(--brand-700);
+  font-family: var(--font-maven);
   margin: 6px 0 0 0;
   font-size: 0.95rem;
 }
@@ -66,6 +69,7 @@
 .footerText {
   margin-top: 18px;
   color: var(--brand-700);
+  font-family: var(--font-maven);
   font-size: 0.9rem;
 }
 
@@ -73,4 +77,72 @@
   color: var(--brand-500);
   font-weight: 600;
   text-decoration: none;
+  font-family: var(--font-ubuntu);
+}
+
+/* ------------------------------- */
+/* ANIMACIÓN DE ENTRADA GLOBAL    */
+/* ------------------------------- */
+
+@keyframes fadeBlurIn {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+    filter: blur(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0px);
+  }
+}
+
+@keyframes fadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ------------------------------- */
+/* CARD ANIMATION                 */
+/* ------------------------------- */
+
+.card {
+  animation: fadeBlurIn 0.55s ease-out forwards;
+}
+
+/* ------------------------------- */
+/* ELEMENTOS INTERNOS (STAGGER)   */
+/* ------------------------------- */
+
+.logo,
+.title,
+.subtitle,
+.formWrapper,
+.footerText {
+  opacity: 0;
+  animation: fadeUp 0.6s ease-out forwards;
+}
+
+/* Cascada */
+.logo {
+  animation-delay: 0.15s;
+}
+.title {
+  animation-delay: 0.3s;
+}
+.subtitle {
+  animation-delay: 0.45s;
+}
+.formWrapper {
+  width: 100%;
+  animation-delay: 0.6s;
+}
+.footerText {
+  animation-delay: 0.75s;
 }

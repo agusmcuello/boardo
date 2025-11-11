@@ -17,6 +17,8 @@
   font-weight: 600;
   color: #111827;
   margin: 0 0 8px 0;
+  font-family: var(--font-ubuntu);
+  font-weight: 600;
 }
 
 .taskDescription {
@@ -24,6 +26,7 @@
   color: #6b7280;
   margin: 0 0 12px 0;
   line-height: 1.4;
+  font-family: var(--font-maven);
 }
 
 .priority {
@@ -33,6 +36,7 @@
   font-size: 12px;
   font-weight: 500;
   text-transform: uppercase;
+  font-family: var(--font-maven);
 }
 .high {
   background-color: #fee2e2;

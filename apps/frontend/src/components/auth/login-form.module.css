@@ -29,7 +29,7 @@
 
 .fields input:focus {
   outline: none;
-  border-color: var(--brand-400);
+  border-color: var(--brand-900);
   box-shadow: 0 0 0 3px rgba(66, 186, 197, 0.2);
 }
 

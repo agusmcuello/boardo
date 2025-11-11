@@ -1,8 +1,5 @@
 /* globals.css (coloca al nivel de app) */
 
-/* Import fonts (Google Fonts) */
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap");
-
 :root {
   /* brand (del logo) */
   --brand-900: #1f1d2a;
@@ -34,11 +31,6 @@
   --radius: 12px;
   --container-gap: 24px;
 
-  /* fonts */
-  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-
   /* shadows */
   --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.04);
   --shadow-md: 0 6px 18px rgba(15, 23, 42, 0.08);
@@ -68,7 +60,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: var(--font-sans);
+  font-family: var(--font-maven);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.45;

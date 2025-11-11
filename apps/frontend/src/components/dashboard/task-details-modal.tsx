@@ -46,9 +46,8 @@ export function TaskDetailsModal({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Task details">
+    <Modal isOpen={isOpen} onClose={onClose} title={task.title}>
       <div>
-        <h3>{task.title}</h3>
         {task.description && <p>{task.description}</p>}
         <p>
           <strong>Priority:</strong> {task.priority}

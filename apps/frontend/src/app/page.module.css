@@ -1,9 +1,72 @@
+.loader {
+  position: fixed;
+  inset: 0; /* reemplaza top/right/bottom/left = 0 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--brand-300); /* o el color que quieras */
+  z-index: 9999;
+  width: 100%;
+  height: 100%;
+}
+
+.ring {
+  width: 50px;
+  height: 50px;
+}
+
+.path {
+  stroke: var(--brand-700);
+  stroke-linecap: round;
+  stroke-width: 3;
+  stroke-miterlimit: inset;
+  fill: none;
+
+  stroke-dasharray: 150;
+  stroke-dashoffset: 180;
+
+  transform-origin: center;
+  transform-box: fill-box;
+
+  animation: dash 0.5s ease-in-out infinite, rotate 0.5s linear infinite;
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes dash {
+  0% {
+    stroke-dashoffset: 120;
+  }
+  50% {
+    stroke-dashoffset: 60;
+  }
+  100% {
+    stroke-dashoffset: 120;
+  }
+}
+
+@keyframes fadeToTransparent {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.loaderFadeOut {
+  animation: fadeToTransparent 0.5s ease forwards;
+}
+
 .page {
   min-height: 100svh;
   display: grid;
   place-items: center;
   padding: 96px 20px;
-  font-family: var(--font-sans);
+  font-family: var(--font-maven);
   background: linear-gradient(
     180deg,
     rgba(66, 186, 197, 0.04),
@@ -19,7 +82,7 @@
   border-radius: 16px;
   padding: 48px;
   box-shadow: var(--shadow-md);
-  transition: transform 0.08s ease-out, box-shadow 0.6s ease;
+  transition: transform 0.08s ease-out, box-shadow 0.12s ease-out;
   will-change: transform, box-shadow;
   cursor: pointer;
   display: flex;
@@ -27,6 +90,7 @@
   gap: 20px;
   align-items: center;
   text-align: center;
+  animation: fadeBlurIn 0.6s ease-out forwards;
 }
 .main:hover {
   box-shadow: 0 10px 20px var(--brand-300);
@@ -38,12 +102,15 @@
   font-size: clamp(28px, 4vw, 44px);
   letter-spacing: -0.01em;
   color: var(--brand-900);
+  font-family: var(--font-ubuntu);
+  font-weight: 600;
 }
 
 .main .lead {
   margin: 0;
   color: var(--brand-700);
   font-size: 1rem;
+  font-family: var(--font-quando);
 }
 
 .ctas {
@@ -80,6 +147,8 @@
   cursor: pointer;
   position: relative;
   overflow: hidden;
+  font-family: var(--font-maven);
+  font-weight: 500;
 }
 
 .ctaSecondary::before {
@@ -117,6 +186,7 @@
   border-bottom: 1px solid rgba(0, 67, 224, 0.06);
   text-decoration: none;
   padding: 12px 20px;
+  font-weight: 300;
 }
 
 .footer .ctaSecondary::before {
@@ -141,4 +211,66 @@
     width: 100%;
     justify-content: center;
   }
+}
+
+/* ---------------------------------------------------- */
+/*   ANIMACIÓN BASE                                       */
+/* ---------------------------------------------------- */
+
+@keyframes fadeBlurIn {
+  0% {
+    opacity: 0;
+    filter: blur(10px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0px);
+  }
+}
+
+@keyframes fadeSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(10px); /* no afecta al panel, solo hijos */
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------------------------------------------------- */
+/*   APLICACIÓN AL PANEL                                 */
+/* ---------------------------------------------------- */
+
+.main {
+  animation: fadeBlurIn 0.6s ease-out forwards;
+}
+
+/* ---------------------------------------------------- */
+/*   APLICACIÓN A LOS ELEMENTOS INTERNOS                 */
+/* ---------------------------------------------------- */
+
+.main h1 {
+  opacity: 0;
+  animation: fadeSlideUp 0.6s ease-out forwards;
+  animation-delay: 0.15s;
+}
+
+.main .lead {
+  opacity: 0;
+  animation: fadeSlideUp 0.6s ease-out forwards;
+  animation-delay: 0.3s;
+}
+
+.ctas {
+  opacity: 0;
+  animation: fadeSlideUp 0.6s ease-out forwards;
+  animation-delay: 0.45s;
+}
+
+.footer {
+  opacity: 0;
+  animation: fadeSlideUp 0.6s ease-out forwards;
+  animation-delay: 0.6s;
 }

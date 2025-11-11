@@ -57,6 +57,8 @@
 .navItem {
   display: flex;
   align-items: center;
+  font-family: var(--font-maven);
+  font-weight: 400;
   gap: 12px;
   padding: 10px 12px;
   border-radius: 10px;
@@ -71,6 +73,7 @@
 .navItem:hover {
   background: rgba(66, 186, 197, 0.2);
   color: var(--brand-900);
+  font-weight: 500;
 }
 
 .icon {

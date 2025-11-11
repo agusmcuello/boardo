@@ -45,3 +45,64 @@
   }
   /* you can hide the sidebar with CSS if you want, or implement a toggle button */
 }
+
+/* ========================================================= */
+/* ANIMACIONES BASE                                          */
+/* ========================================================= */
+
+@keyframes fadeBlurIn {
+  0% {
+    opacity: 0;
+    filter: blur(12px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+@keyframes fadeSlideLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-14px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeSlideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========================================================= */
+/* ANIMACIÓN DE ENTRADA GLOBAL DEL LAYOUT                    */
+/* ========================================================= */
+
+.appLayout {
+  opacity: 0;
+  animation: fadeBlurIn 0.55s ease-out forwards;
+}
+
+/* ========================================================= */
+/* ENTRADA ESCALONADA                                        */
+/* ==============================*

@@ -7,12 +7,13 @@
   transition: all 0.2s ease;
   cursor: pointer;
   border: none;
-  font-family: inherit;
+  font-family: var(--font-maven);
+  font-weight: 500;
   outline: none;
 }
 
 .button:focus {
-  box-shadow: 0 0 0 2px var(--brand-300);
+  box-shadow: 0 0 0 2px var(--brand-900);
 }
 
 .button:disabled {
@@ -32,7 +33,7 @@
 }
 
 .default:hover:not(:disabled) {
-  background-color: var(--brand-300);
+  background-color: var(--brand-700);
 }
 
 .outline {
