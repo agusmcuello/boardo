@@ -25,10 +25,6 @@ app.use(
   })
 );
 
-// ✅ Preflight correcto sin wildcards
-app.options("/", cors());
-app.options("/api/*", cors());
-
 app.use(bodyParser.json());
 
 const PORT = process.env.PORT || 4000;
