@@ -2,7 +2,6 @@ import dotenv from "dotenv";
 import path from "path";
 import { verifyJWT } from "./middlewares/auth";
 
-// 👇 fuerza a cargar el .env que está en apps/backend/.env
 dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
 import express from "express";
@@ -16,6 +15,7 @@ import listsRoutes from "./routes/lists";
 import tasksRoutes from "./routes/tasks";
 
 const app = express();
+
 app.use(
   cors({
     origin: ["https://boardo-frontend.vercel.app", "http://localhost:3000"],
@@ -25,8 +25,9 @@ app.use(
   })
 );
 
-// ✅ importante: permitir preflight correctamente sin expresiones regulares
-app.options("*", cors());
+// ✅ Preflight correcto sin wildcards
+app.options("/", cors());
+app.options("/api/*", cors());
 
 app.use(bodyParser.json());
 
@@ -47,12 +48,17 @@ app.get("/protected", verifyJWT, (req, res) => {
   res.json({ message: "You are authorized!", user: (req as any).user });
 });
 
+// ✅ Rutas reales
 app.use("/api/auth", authRoutes);
 app.use("/health", healthRoutes);
-
 app.use("/api/boards", boardsRoutes);
 app.use("/api/lists", listsRoutes);
 app.use("/api/tasks", tasksRoutes);
+
+// ✅ Fallback seguro compatible con Express 5
+app.use((req, res) => {
+  res.status(404).json({ message: "Not found" });
+});
 
 app.listen(PORT, () => {
   console.log(`🚀 Backend listening on http://localhost:${PORT}`);
